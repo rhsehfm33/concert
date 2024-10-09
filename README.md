@@ -15,4 +15,5 @@
 ![image](https://github.com/user-attachments/assets/0874d790-ff69-4e28-a34d-79809c457663)
 
 # ERD 테이블
-![image](https://github.com/user-attachments/assets/fc7004fc-9caf-4a37-b3ec-4283db9a04b4)
+![image](https://github.com/user-attachments/assets/28c9b7ae-afdb-4e26-9dd1-84040c520e08)
+
