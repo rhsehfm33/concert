@@ -17,3 +17,5 @@
 # ERD 테이블
 ![image](https://github.com/user-attachments/assets/28c9b7ae-afdb-4e26-9dd1-84040c520e08)
 
+# API 명세서
+[링크](https://docs.google.com/spreadsheets/d/1e3kk1NFDIKOH9-aFPyLq_YYVukhtUDrGrpxJ1n_lxkQ/edit?gid=0#gid=0)
