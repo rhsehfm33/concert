@@ -1,6 +1,7 @@
 package ms.parade.infrastructure.queue;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -55,4 +56,17 @@ public class QueueTokenRepositoryImpl implements QueueTokenRepository {
         queueTokenJpaRepository.deleteById(id);
     }
 
+    @Override
+    public List<QueueToken> findFrontWaits() {
+        return queueTokenJpaRepository.findTop30ByStatusOrderByIdAsc(QueueTokenStatus.WAIT).stream()
+            .map(QueueTokenEntity::to)
+            .toList();
+    }
+
+    @Override
+    public List<QueueToken> findTimeoutWaits() {
+        return queueTokenJpaRepository.findByStatusAndUpdatedAtBefore(
+            QueueTokenStatus.PASS, LocalDateTime.now().minusMinutes(20)
+        ).stream().map(QueueTokenEntity::to).toList();
+    }
 }

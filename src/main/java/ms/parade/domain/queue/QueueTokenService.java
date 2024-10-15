@@ -1,7 +1,9 @@
 package ms.parade.domain.queue;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,19 @@ public class QueueTokenService {
         );
         int order = queueTokenRepository.getWaitOrderByTime(queueToken.createdAt());
         return new QueueTokenInfo(queueToken, order + 1);
+    }
+
+    public List<QueueTokenInfo> findFrontWaits() {
+        AtomicInteger index = new AtomicInteger(1);
+        return queueTokenRepository.findFrontWaits().stream()
+            .map(queueToken -> new QueueTokenInfo(queueToken, index.getAndIncrement()))
+            .toList();
+    }
+
+    public List<QueueTokenInfo> findTimeoutPasses() {
+        return queueTokenRepository.findTimeoutWaits().stream()
+            .map(queueToken -> new QueueTokenInfo(queueToken, -1))
+            .toList();
     }
 
     public QueueTokenInfo update(long uuid, QueueTokenStatus queueTokenStatus) {
