@@ -1,6 +1,6 @@
 package ms.parade.interfaces.queue;
 
-import ms.parade.domain.reservation.QueueStatus;
+import ms.parade.domain.queue.QueueTokenStatus;
 
 public record QueueResponse(
     String uuid,
@@ -11,6 +11,6 @@ public record QueueResponse(
     long seatId,
     String seatName,
     String date,
-    QueueStatus status,
+    QueueTokenStatus status,
     String detail) {
 }
