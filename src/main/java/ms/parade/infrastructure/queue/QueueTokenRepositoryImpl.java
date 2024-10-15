@@ -1,5 +1,6 @@
 package ms.parade.infrastructure.queue;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -24,9 +25,10 @@ public class QueueTokenRepositoryImpl implements QueueTokenRepository {
     @Override
     public QueueToken updateStatus(long id, QueueTokenStatus queueTokenStatus) {
         QueueTokenEntity queueTokenEntity = queueTokenJpaRepository.findById(id).orElseThrow(
-            () -> new IllegalArgumentException("No such queue token")
+            () -> new IllegalArgumentException("존재하지 않는 토큰입니다.")
         );
         queueTokenEntity.setStatus(queueTokenStatus);
+        queueTokenEntity.setUpdatedAt(LocalDateTime.now());
         queueTokenJpaRepository.save(queueTokenEntity);
         return QueueTokenEntity.to(queueTokenEntity);
     }

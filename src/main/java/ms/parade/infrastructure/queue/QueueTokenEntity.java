@@ -29,6 +29,7 @@ public class QueueTokenEntity {
 
     private LocalDateTime createdAt;
 
+    @Setter
     private LocalDateTime updatedAt;
 
     public static QueueTokenEntity from(QueueTokenParams queueTokenParams) {
