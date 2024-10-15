@@ -32,6 +32,11 @@ public class QueueTokenRepositoryImpl implements QueueTokenRepository {
     }
 
     @Override
+    public int getWaitOrderByTime(LocalDateTime time) {
+        return queueTokenJpaRepository.countByStatusAndCreatedAtBefore(QueueTokenStatus.WAIT, time);
+    }
+
+    @Override
     public Optional<QueueToken> findById(long id) {
         Optional<QueueTokenEntity> queueTokenEntity = queueTokenJpaRepository.findById(id);
         return queueTokenEntity.map(QueueTokenEntity::to);
