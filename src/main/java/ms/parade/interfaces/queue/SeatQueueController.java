@@ -16,7 +16,7 @@ public class SeatQueueController {
     ResponseEntity<QueueResponse> getQueueToken(@PathVariable String uuid) {
         QueueResponse queueResponse = new QueueResponse(uuid, 1, 1, 1,
             "Billie Eilish 내한", 1, "A1", "2024-10-18",
-            QueueTokenStatus.WAITING, "Billie Eilish 내한 공연입니다.");
+            QueueTokenStatus.WAIT, "Billie Eilish 내한 공연입니다.");
         return ResponseEntity.ok(queueResponse);
     }
 
