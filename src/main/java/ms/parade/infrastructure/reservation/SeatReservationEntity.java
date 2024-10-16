@@ -1,6 +1,6 @@
 package ms.parade.infrastructure.reservation;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -26,8 +26,8 @@ public class SeatReservationEntity {
 
     private long seatId;
 
-    private Date date;
-
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
+
+    private LocalDateTime createdAt;
 }
