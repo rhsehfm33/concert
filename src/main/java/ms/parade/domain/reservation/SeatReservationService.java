@@ -24,4 +24,8 @@ public class SeatReservationService {
 
         return seatReservationRepository.save(seatReservationParams);
     }
+
+    public SeatReservation updateStatus(long reservationId, ReservationStatus status) {
+        return seatReservationRepository.updateStatus(reservationId, status);
+    }
 }

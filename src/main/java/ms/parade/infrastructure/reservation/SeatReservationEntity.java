@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ms.parade.domain.reservation.ReservationStatus;
 import ms.parade.domain.reservation.SeatReservation;
 
@@ -27,6 +28,7 @@ public class SeatReservationEntity {
 
     private long seatId;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
