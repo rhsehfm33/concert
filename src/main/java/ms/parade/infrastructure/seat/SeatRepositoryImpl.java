@@ -23,7 +23,7 @@ public class SeatRepositoryImpl implements SeatRepository {
 
     @Override
     public Optional<Seat> findByIdWithPessimisticLock(long id) {
-        return seatJpaRepository.findById(id).map(SeatEntity::to);
+        return seatJpaRepository.findByIdForUpdate(id).map(SeatEntity::to);
     }
 
     @Override
