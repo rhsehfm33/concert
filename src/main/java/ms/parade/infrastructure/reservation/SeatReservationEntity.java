@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ms.parade.domain.reservation.ReservationStatus;
+import ms.parade.domain.reservation.SeatReservation;
 
 @Entity
 @Getter
@@ -30,4 +31,23 @@ public class SeatReservationEntity {
     private ReservationStatus status;
 
     private LocalDateTime createdAt;
+
+    public static SeatReservationEntity from(SeatReservationParams seatReservationParams) {
+        SeatReservationEntity seatReservationEntity = new SeatReservationEntity();
+        seatReservationEntity.userId = seatReservationParams.userId();
+        seatReservationEntity.seatId = seatReservationParams.seatId();
+        seatReservationEntity.status = seatReservationParams.status();
+        seatReservationEntity.createdAt = seatReservationParams.createdAt();
+        return seatReservationEntity;
+    }
+
+    public static SeatReservation to(SeatReservationEntity seatReservationEntity) {
+        return new SeatReservation(
+            seatReservationEntity.id,
+            seatReservationEntity.userId,
+            seatReservationEntity.seatId,
+            seatReservationEntity.status,
+            seatReservationEntity.createdAt
+        );
+    }
 }
