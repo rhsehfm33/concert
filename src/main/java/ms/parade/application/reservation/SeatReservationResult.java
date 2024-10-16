@@ -1,10 +1,10 @@
 package ms.parade.application.reservation;
 
-import ms.parade.domain.reservation.SeatReservationInfo;
-import ms.parade.domain.seat.SeatInfo;
+import ms.parade.domain.reservation.SeatReservation;
+import ms.parade.domain.seat.Seat;
 
 public record SeatReservationResult(
-    SeatInfo seatInfo,
-    SeatReservationInfo seatReservationInfo
+    Seat seatInfo,
+    SeatReservation seatReservation
 ) {
 }

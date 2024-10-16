@@ -14,17 +14,15 @@ import lombok.RequiredArgsConstructor;
 public class SeatService {
     private final SeatRepository seatRepository;
 
-    public List<SeatInfo> findAvailableSeats(long scheduleId) {
-        List<Seat> seats = seatRepository.findByScheduleIdAndSeatStatus(scheduleId, SeatStatus.EMPTY);
-        return seats.stream().map(SeatInfo::new).toList();
+    public List<Seat> findAvailableSeats(long scheduleId) {
+        return seatRepository.findByScheduleIdAndSeatStatus(scheduleId, SeatStatus.EMPTY);
     }
 
-    public Optional<SeatInfo> findByIdWithPessimisticLock(long seatId) {
-        return seatRepository.findByIdWithPessimisticLock(seatId).map(SeatInfo::new);
+    public Optional<Seat> findByIdWithPessimisticLock(long seatId) {
+        return seatRepository.findByIdWithPessimisticLock(seatId);
     }
 
-    public SeatInfo updateStatus(long seatId, SeatStatus status) {
-        Seat seat = seatRepository.updateStatus(seatId, status);
-        return new SeatInfo(seat);
+    public Seat updateStatus(long seatId, SeatStatus status) {
+        return seatRepository.updateStatus(seatId, status);
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import ms.parade.domain.seat.SeatInfo;
+import ms.parade.domain.seat.Seat;
 import ms.parade.domain.seat.SeatService;
 
 @RestController
@@ -20,8 +20,8 @@ public class SeatController {
 
     @GetMapping("/concerts/{scheduleId}/available-seats")
     ResponseEntity<List<SeatResponse>> getAvailableSeats(@PathVariable long scheduleId) {
-        List<SeatInfo> seatInfos = seatService.findAvailableSeats(scheduleId);
-        List<SeatResponse> seatResponses = seatInfos.stream().map(SeatResponse::new).toList();
+        List<Seat> seats = seatService.findAvailableSeats(scheduleId);
+        List<SeatResponse> seatResponses = seats.stream().map(SeatResponse::new).toList();
         return ResponseEntity.ok(seatResponses);
     }
 }

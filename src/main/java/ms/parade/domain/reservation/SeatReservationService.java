@@ -14,7 +14,7 @@ import ms.parade.infrastructure.reservation.SeatReservationParams;
 public class SeatReservationService {
     private final SeatReservationRepository seatReservationRepository;
 
-    public SeatReservationInfo createReservation(long userId, long seatId) {
+    public SeatReservation createReservation(long userId, long seatId) {
         SeatReservationParams seatReservationParams = new SeatReservationParams(
             userId,
             seatId,
@@ -22,7 +22,6 @@ public class SeatReservationService {
             LocalDateTime.now()
         );
 
-        SeatReservation seatReservation = seatReservationRepository.save(seatReservationParams);
-        return new SeatReservationInfo(seatReservation);
+        return seatReservationRepository.save(seatReservationParams);
     }
 }
