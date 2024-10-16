@@ -20,7 +20,8 @@ public class PointController {
 
     @GetMapping("/users/{userId}/point")
     ResponseEntity<UserPointResponse> getUserPoint(@PathVariable long userId) {
-        return ResponseEntity.ok(new UserPointResponse(userId, 1_000_000));
+        long point = pointFacade.getUserPoint(userId);
+        return ResponseEntity.ok(new UserPointResponse(userId, point));
     }
 
     @PostMapping("/users/{userId}/point")

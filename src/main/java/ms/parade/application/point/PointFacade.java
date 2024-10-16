@@ -13,12 +13,12 @@ import ms.parade.domain.user.UserService;
 import ms.parade.infrastructure.point.PointHistoryParams;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PointFacade {
     private final UserService userService;
     private final PointHistoryService pointHistoryService;
 
-    @Transactional
     public UserPointResult changeUserPoint(long userId, long amount, PointType pointType) {
         if (pointType.equals(PointType.CHARGE)) {
             return chargePoint(userId, amount);
@@ -28,7 +28,6 @@ public class PointFacade {
         }
     }
 
-    @Transactional
     public UserPointResult chargePoint(long userId, long amount) {
         User user = userService.updatePoint(userId, amount, PointType.CHARGE);
 
@@ -42,5 +41,12 @@ public class PointFacade {
         PointHistory pointHistory = pointHistoryService.record(pointHistoryCommand);
 
         return new UserPointResult(user, pointHistory);
+    }
+
+    public long getUserPoint(long userId) {
+        User user = userService.findById(userId).orElseThrow(
+            () -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
+        );
+        return user.point();
     }
 }

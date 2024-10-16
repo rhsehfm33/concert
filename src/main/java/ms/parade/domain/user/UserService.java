@@ -1,5 +1,7 @@
 package ms.parade.domain.user;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,5 +22,9 @@ public class UserService {
         } else {
             throw new IllegalArgumentException("잘못된 충전 타입입니다.");
         }
+    }
+
+    public Optional<User> findById(long userId) {
+        return userRepository.findById(userId);
     }
 }
