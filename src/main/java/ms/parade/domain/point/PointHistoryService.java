@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 public class PointHistoryService {
     private final PointHistoryRepository pointHistoryRepository;
 
-    public void record(PointHistoryCommand pointHistoryCommand) {
-        pointHistoryRepository.save(pointHistoryCommand.pointHistoryParams());
+    public PointHistory record(PointHistoryCommand pointHistoryCommand) {
+        return pointHistoryRepository.save(pointHistoryCommand.pointHistoryParams());
     }
 }
