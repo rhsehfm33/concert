@@ -23,8 +23,8 @@ public class SeatService {
         return seatRepository.findByIdWithPessimisticLock(seatId).map(SeatInfo::new);
     }
 
-    public SeatInfo reserveSeat(long seatId) {
-        Seat seat = seatRepository.updateStatus(seatId, SeatStatus.BOOKED);
+    public SeatInfo updateStatus(long seatId, SeatStatus status) {
+        Seat seat = seatRepository.updateStatus(seatId, status);
         return new SeatInfo(seat);
     }
 }
