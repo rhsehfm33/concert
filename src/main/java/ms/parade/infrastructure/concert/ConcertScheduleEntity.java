@@ -1,6 +1,6 @@
 package ms.parade.infrastructure.concert;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ms.parade.domain.concert.ConcertSchedule;
 
 @Entity
 @Getter
@@ -23,5 +24,17 @@ public class ConcertScheduleEntity {
 
     private int allSeats;
 
-    private Date performanceDate;
+    private int availableSeats;
+
+    private LocalDate performanceDate;
+
+    public static ConcertSchedule to(ConcertScheduleEntity concertScheduleEntity) {
+        return new ConcertSchedule(
+            concertScheduleEntity.id,
+            concertScheduleEntity.concertId,
+            concertScheduleEntity.allSeats,
+            concertScheduleEntity.availableSeats,
+            concertScheduleEntity.performanceDate
+        );
+    }
 }
