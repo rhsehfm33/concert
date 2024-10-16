@@ -1,4 +1,6 @@
 package ms.parade.interfaces.point;
 
-public record UserPointRequest(long userId, long amount) {
+import ms.parade.domain.point.PointType;
+
+public record UserPointRequest(long amount, PointType type) {
 }

@@ -8,11 +8,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ms.parade.interfaces.common.MessageResponse;
+import lombok.RequiredArgsConstructor;
+import ms.parade.application.point.PointFacade;
+import ms.parade.application.point.UserPointResult;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v1")
 public class PointController {
+    private final PointFacade pointFacade;
 
     @GetMapping("/users/{userId}/point")
     ResponseEntity<UserPointResponse> getUserPoint(@PathVariable long userId) {
@@ -20,10 +24,11 @@ public class PointController {
     }
 
     @PostMapping("/users/{userId}/point")
-    ResponseEntity<MessageResponse> addUserPoint(
+    ResponseEntity<UserPointResponse> changeUserPoint(
         @PathVariable long userId, @RequestBody UserPointRequest userPointRequest
     ) {
-        return ResponseEntity.ok(new MessageResponse("성공적으로 포인트를 충전했습니다."));
+        UserPointResult userPointResult = pointFacade.changeUserPoint(userId, userPointRequest.amount(), userPointRequest.type());
+        UserPointResponse userPointResponse = new UserPointResponse(userId, userPointResult.user().point());
+        return ResponseEntity.ok(userPointResponse);
     }
-
 }
