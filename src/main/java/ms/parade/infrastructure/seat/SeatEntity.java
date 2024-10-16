@@ -10,6 +10,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ms.parade.domain.seat.Seat;
 import ms.parade.domain.seat.SeatStatus;
 
 @Entity
@@ -35,5 +36,15 @@ public class SeatEntity {
         if (status == null) {
             status = SeatStatus.EMPTY;
         }
+    }
+
+    public static Seat to(SeatEntity seatEntity) {
+        return new Seat(
+            seatEntity.id,
+            seatEntity.scheduleId,
+            seatEntity.name,
+            seatEntity.price,
+            seatEntity.status
+        );
     }
 }
