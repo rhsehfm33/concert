@@ -26,7 +26,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User updatePoint(long id, long amount) {
+    public User addPoint(long id, long amount) {
         UserEntity userEntity = userJpaRepository.findById(id).orElseThrow(
             () -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다")
         );

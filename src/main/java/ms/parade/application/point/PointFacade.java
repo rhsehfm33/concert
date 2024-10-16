@@ -19,15 +19,6 @@ public class PointFacade {
     private final UserService userService;
     private final PointHistoryService pointHistoryService;
 
-    public UserPointResult changeUserPoint(long userId, long amount, PointType pointType) {
-        if (pointType.equals(PointType.CHARGE)) {
-            return chargePoint(userId, amount);
-        } else {
-            //TODO: 결제 구현
-            return null;
-        }
-    }
-
     public UserPointResult chargePoint(long userId, long amount) {
         User user = userService.updatePoint(userId, amount, PointType.CHARGE);
 

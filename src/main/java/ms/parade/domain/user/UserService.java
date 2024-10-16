@@ -16,9 +16,9 @@ public class UserService {
 
     public User updatePoint(long userId, long amount, PointType pointType) {
         if (PointType.CHARGE.equals(pointType)) {
-            return userRepository.updatePoint(userId, amount);
+            return userRepository.addPoint(userId, amount);
         } else if (PointType.SPEND.equals(pointType)) {
-            return userRepository.updatePoint(userId, -amount);
+            return userRepository.addPoint(userId, -amount);
         } else {
             throw new IllegalArgumentException("잘못된 충전 타입입니다.");
         }

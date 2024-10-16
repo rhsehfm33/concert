@@ -25,11 +25,12 @@ public class PointController {
     }
 
     @PostMapping("/users/{userId}/point")
-    ResponseEntity<UserPointResponse> changeUserPoint(
+    ResponseEntity<UserPointResponse> chargeUserPoint(
         @PathVariable long userId, @RequestBody UserPointRequest userPointRequest
     ) {
-        UserPointResult userPointResult = pointFacade.changeUserPoint(userId, userPointRequest.amount(), userPointRequest.type());
-        UserPointResponse userPointResponse = new UserPointResponse(userId, userPointResult.user().point());
-        return ResponseEntity.ok(userPointResponse);
+        UserPointResult userPointResult = pointFacade.chargePoint(
+            userId, userPointRequest.amount()
+        );
+        return ResponseEntity.ok(new UserPointResponse(userId, userPointResult.user().point()));
     }
 }

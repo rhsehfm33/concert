@@ -7,5 +7,5 @@ import ms.parade.infrastructure.user.UserParams;
 public interface UserRepository {
     Optional<User> findById(long id);
     User save(UserParams userParams);
-    User updatePoint(long id, long amount);
+    User addPoint(long id, long amount);
 }
