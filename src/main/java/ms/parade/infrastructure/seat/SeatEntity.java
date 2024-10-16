@@ -10,6 +10,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ms.parade.domain.seat.Seat;
 import ms.parade.domain.seat.SeatStatus;
 
@@ -28,6 +29,7 @@ public class SeatEntity {
 
     private long price;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private SeatStatus status;
 
