@@ -21,7 +21,7 @@ public class QueueTokenScheduler {
     public void passQueueTokens() {
         List<QueueTokenInfo> queueTokenInfos = queueTokenService.findFrontWaits();
         for (QueueTokenInfo queueTokenInfo : queueTokenInfos) {
-            queueTokenService.update(queueTokenInfo.uuid(), QueueTokenStatus.PASS);
+            queueTokenService.update(queueTokenInfo.queueToken().uuid(), QueueTokenStatus.PASS);
         }
     }
 
@@ -30,7 +30,7 @@ public class QueueTokenScheduler {
     public void deleteQueueTokens() {
         List<QueueTokenInfo> queueTokenInfos = queueTokenService.findTimeoutPasses();
         for (QueueTokenInfo queueTokenInfo : queueTokenInfos) {
-            queueTokenService.deleteById(queueTokenInfo.uuid());
+            queueTokenService.deleteById(queueTokenInfo.queueToken().uuid());
         }
     }
 
