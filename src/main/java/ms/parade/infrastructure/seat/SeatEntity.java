@@ -21,7 +21,7 @@ public class SeatEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private long concertScheduleId;
+    private long scheduleId;
 
     private String name;
 
