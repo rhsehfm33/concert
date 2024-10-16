@@ -1,6 +1,7 @@
 package ms.parade.domain.reservation;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,5 +28,9 @@ public class SeatReservationService {
 
     public SeatReservation updateStatus(long reservationId, ReservationStatus status) {
         return seatReservationRepository.updateStatus(reservationId, status);
+    }
+
+    public Optional<SeatReservation> findByIdForUpdate(long id) {
+        return seatReservationRepository.findByIdForUpdate(id);
     }
 }

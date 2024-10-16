@@ -1,5 +1,7 @@
 package ms.parade.infrastructure.reservation;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,5 +29,10 @@ public class SeatReservationImpl implements SeatReservationRepository {
         seatReservationEntity.setStatus(reservationStatus);
         seatReservationEntity = seatReservationJpaRepository.save(seatReservationEntity);
         return SeatReservationEntity.to(seatReservationEntity);
+    }
+
+    @Override
+    public Optional<SeatReservation> findByIdForUpdate(long id) {
+        return seatReservationJpaRepository.findByIdForUpdate(id).map(SeatReservationEntity::to);
     }
 }
