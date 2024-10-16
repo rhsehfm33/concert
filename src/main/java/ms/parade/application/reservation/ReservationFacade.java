@@ -26,7 +26,7 @@ public class ReservationFacade {
         }
 
         seat = seatService.updateStatus(seatId, SeatStatus.BOOKED);
-        SeatReservation seatReservation = seatReservationService.createReservation(userId, seatId);
+        SeatReservation seatReservation = seatReservationService.create(userId, seatId);
         return new SeatReservationResult(seat, seatReservation);
     }
 }

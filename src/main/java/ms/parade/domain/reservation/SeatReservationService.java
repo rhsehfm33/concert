@@ -14,7 +14,7 @@ import ms.parade.infrastructure.reservation.SeatReservationParams;
 public class SeatReservationService {
     private final SeatReservationRepository seatReservationRepository;
 
-    public SeatReservation createReservation(long userId, long seatId) {
+    public SeatReservation create(long userId, long seatId) {
         SeatReservationParams seatReservationParams = new SeatReservationParams(
             userId,
             seatId,
