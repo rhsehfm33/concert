@@ -21,5 +21,7 @@ public class ConcertScheduleEntity {
 
     private long concertId;
 
+    private int allSeats;
+
     private Date performanceDate;
 }
