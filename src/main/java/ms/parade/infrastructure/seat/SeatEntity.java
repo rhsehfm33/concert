@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,11 +19,18 @@ public class SeatEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private long concertId;
+    private long concertScheduleId;
 
     private String name;
 
     private long price;
 
     private SeatStatus status;
+
+    @PrePersist
+    public void prePersist() {
+        if (status == null) {
+            status = SeatStatus.EMPTY;
+        }
+    }
 }
