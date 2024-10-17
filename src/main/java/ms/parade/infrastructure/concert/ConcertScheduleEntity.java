@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ms.parade.domain.concert.ConcertSchedule;
 
 @Entity
@@ -24,6 +25,7 @@ public class ConcertScheduleEntity {
 
     private int allSeats;
 
+    @Setter
     private int availableSeats;
 
     private LocalDate performanceDate;

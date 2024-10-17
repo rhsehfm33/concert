@@ -1,6 +1,7 @@
 package ms.parade.domain.reservation;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -32,5 +33,11 @@ public class SeatReservationService {
 
     public Optional<SeatReservation> findByIdForUpdate(long id) {
         return seatReservationRepository.findByIdForUpdate(id);
+    }
+
+    public List<SeatReservation> findTimeoutReservationsForUpdate() {
+        return seatReservationRepository.findByStatusAndCreatedAtBeforeForUpdate(
+            ReservationStatus.PAYING, LocalDateTime.now().minusMinutes(5)
+        );
     }
 }

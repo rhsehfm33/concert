@@ -27,6 +27,11 @@ public class SeatRepositoryImpl implements SeatRepository {
     }
 
     @Override
+    public List<Seat> findByIdsForUpdate(List<Long> ids) {
+        return seatJpaRepository.findByIdsForUpdate(ids).stream().map(SeatEntity::to).toList();
+    }
+
+    @Override
     public Seat updateStatus(long id, SeatStatus seatStatus) {
         SeatEntity seatEntity = seatJpaRepository.findById(id).orElseThrow(
             () -> new IllegalArgumentException("No such seat exists!")

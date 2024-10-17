@@ -1,5 +1,7 @@
 package ms.parade.infrastructure.reservation;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -34,5 +36,11 @@ public class SeatReservationImpl implements SeatReservationRepository {
     @Override
     public Optional<SeatReservation> findByIdForUpdate(long id) {
         return seatReservationJpaRepository.findByIdForUpdate(id).map(SeatReservationEntity::to);
+    }
+
+    @Override
+    public List<SeatReservation> findByStatusAndCreatedAtBeforeForUpdate(ReservationStatus status, LocalDateTime limit) {
+        List<SeatReservationEntity> seatReservationEntities = seatReservationJpaRepository.findByStatusAndCreatedAtBefore(status, limit);
+        return seatReservationEntities.stream().map(SeatReservationEntity::to).toList();
     }
 }

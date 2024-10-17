@@ -22,6 +22,10 @@ public class SeatService {
         return seatRepository.findByIdForUpdate(seatId);
     }
 
+    public List<Seat> findByIdsForUpdate(List<Long> seatIds) {
+        return seatRepository.findByIdsForUpdate(seatIds);
+    }
+
     public Seat updateStatus(long seatId, SeatStatus status) {
         return seatRepository.updateStatus(seatId, status);
     }
