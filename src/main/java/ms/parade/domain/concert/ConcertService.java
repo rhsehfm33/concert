@@ -24,7 +24,7 @@ public class ConcertService {
             () -> new EntityNotFoundException("존재하지 않는 콘서트 스케쥴입니다.")
         );
         int nextAvailableSeats = concertSchedule.availableSeats() + amount;
-        if (nextAvailableSeats < 0 || nextAvailableSeats > concertSchedule.availableSeats()) {
+        if (nextAvailableSeats < 0 || nextAvailableSeats > concertSchedule.allSeats()) {
             throw new IllegalArgumentException("잔여석은 0이상 최대 좌석 수 이하여야 합니다.");
         }
         return concertRepository.updateScheduleAvailableSeats(scheduleId, nextAvailableSeats);
