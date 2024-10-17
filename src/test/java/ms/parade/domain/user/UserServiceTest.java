@@ -1,4 +1,4 @@
-package ms.parade.user;
+package ms.parade.domain.user;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -14,9 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ms.parade.domain.point.PointType;
-import ms.parade.domain.user.User;
-import ms.parade.domain.user.UserRepository;
-import ms.parade.domain.user.UserService;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {

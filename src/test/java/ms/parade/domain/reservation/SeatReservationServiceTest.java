@@ -1,4 +1,4 @@
-package ms.parade.reservation;
+package ms.parade.domain.reservation;
 
 import static org.mockito.Mockito.*;
 
@@ -11,11 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import ms.parade.domain.reservation.ReservationStatus;
-import ms.parade.domain.reservation.SeatReservation;
-import ms.parade.domain.reservation.SeatReservationRepository;
-import ms.parade.domain.reservation.SeatReservationService;
 
 @ExtendWith(MockitoExtension.class)
 public class SeatReservationServiceTest {
