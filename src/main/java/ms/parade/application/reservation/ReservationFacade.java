@@ -30,7 +30,7 @@ public class ReservationFacade {
             () -> new EntityNotFoundException("사용자 정보가 잘못됐습니다.")
         );
         if (SeatStatus.BOOKED.equals(seat.status())) {
-            throw new IllegalArgumentException("Seat id[" + seatId + "]는 이미 예약됐습니다.");
+            throw new IllegalStateException("Seat id[" + seatId + "]는 이미 예약됐습니다.");
         }
 
         seat = seatService.updateStatus(seatId, SeatStatus.BOOKED);
