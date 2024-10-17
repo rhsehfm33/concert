@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import ms.parade.domain.concert.ConcertService;
 import ms.parade.domain.reservation.SeatReservation;
 import ms.parade.domain.reservation.SeatReservationService;
 import ms.parade.domain.seat.Seat;
@@ -14,6 +15,7 @@ import ms.parade.domain.seat.SeatStatus;
 @RequiredArgsConstructor
 public class ReservationFacade {
     private final SeatService seatService;
+    private final ConcertService concertService;
     private final SeatReservationService seatReservationService;
 
     @Transactional
@@ -27,6 +29,7 @@ public class ReservationFacade {
 
         seat = seatService.updateStatus(seatId, SeatStatus.BOOKED);
         SeatReservation seatReservation = seatReservationService.create(userId, seatId);
+        concertService.addAvailableSeats(seat.scheduleId(), -1);
         return new SeatReservationResult(seat, seatReservation);
     }
 }
