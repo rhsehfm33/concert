@@ -18,8 +18,8 @@ public class SeatService {
         return seatRepository.findByScheduleIdAndSeatStatus(scheduleId, SeatStatus.EMPTY);
     }
 
-    public Optional<Seat> findByIdWithPessimisticLock(long seatId) {
-        return seatRepository.findByIdWithPessimisticLock(seatId);
+    public Optional<Seat> findByIdForUpdate(long seatId) {
+        return seatRepository.findByIdForUpdate(seatId);
     }
 
     public Seat updateStatus(long seatId, SeatStatus status) {

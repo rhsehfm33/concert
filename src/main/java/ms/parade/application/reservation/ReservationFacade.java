@@ -18,7 +18,7 @@ public class ReservationFacade {
 
     @Transactional
     public SeatReservationResult reserveSeat(long userId, long seatId) {
-        Seat seat = seatService.findByIdWithPessimisticLock(seatId).orElseThrow(
+        Seat seat = seatService.findByIdForUpdate(seatId).orElseThrow(
             () -> new IllegalArgumentException("Seat id[" + seatId + "]는 존재하지 않습니다.")
         );
         if (SeatStatus.BOOKED.equals(seat.status())) {

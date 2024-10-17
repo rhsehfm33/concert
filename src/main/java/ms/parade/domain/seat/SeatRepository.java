@@ -5,6 +5,6 @@ import java.util.Optional;
 
 public interface SeatRepository {
     List<Seat> findByScheduleIdAndSeatStatus(long scheduleId, SeatStatus seatStatus);
-    Optional<Seat> findByIdWithPessimisticLock(long id);
+    Optional<Seat> findByIdForUpdate(long id);
     Seat updateStatus(long id, SeatStatus seatStatus);
 }
