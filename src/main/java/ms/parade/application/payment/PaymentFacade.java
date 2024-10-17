@@ -39,9 +39,12 @@ public class PaymentFacade {
         if (seatReservation.userId() != userId) {
             throw new IllegalArgumentException("해당 예약에 대한 권한이 없습니다.");
         }
+        if (!ReservationStatus.PAYING.equals(seatReservation.status())) {
+            throw new IllegalArgumentException("결제할 수 없는 예약 건입니다.");
+        }
         seatReservationService.updateStatus(seatReservation.id(), ReservationStatus.COMPLETE);
 
-        // 좌석 예약 상태이지 체크
+        // 좌석 예약 상태인지 체크
         Seat seat = seatService.findByIdForUpdate(seatReservation.seatId()).orElseThrow(
             () -> new EntityNotFoundException("존재하지 않는 좌석입니다.")
         );
