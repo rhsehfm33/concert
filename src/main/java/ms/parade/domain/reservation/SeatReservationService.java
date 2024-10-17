@@ -19,7 +19,7 @@ public class SeatReservationService {
         SeatReservationParams seatReservationParams = new SeatReservationParams(
             userId,
             seatId,
-            ReservationStatus.BOOKING,
+            ReservationStatus.PAYING,
             LocalDateTime.now()
         );
 
