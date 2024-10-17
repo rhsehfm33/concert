@@ -1,6 +1,7 @@
 package ms.parade.interfaces.reservation;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,12 +17,13 @@ import ms.parade.application.reservation.SeatReservationResult;
 public class ReservationController {
     private final ReservationFacade reservationFacade;
 
-    @PostMapping("/seat-reservations")
+    @PostMapping("/protected/seat-reservations")
     ResponseEntity<SeatReservationResponse> reserveSeat(
+        Authentication authentication,
         @RequestBody SeatReservationRequest seatReservationRequest
     ) {
         SeatReservationResult seatReservationResult = reservationFacade.reserveSeat(
-            seatReservationRequest.userId(),
+            (long)authentication.getPrincipal(),
             seatReservationRequest.seatId()
         );
 

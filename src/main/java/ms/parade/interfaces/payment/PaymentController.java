@@ -1,6 +1,7 @@
 package ms.parade.interfaces.payment;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,12 +17,13 @@ import ms.parade.domain.payment.SeatPayment;
 public class PaymentController {
     private final PaymentFacade paymentFacade;
 
-    @PostMapping("/seat-reservations/payment")
+    @PostMapping("/protected/seat-reservations/payment")
     ResponseEntity<SeatPayment> paySeatReservation(
+        Authentication authentication,
         @RequestBody SeatPaymentRequest seatPaymentRequest
     ) {
         return ResponseEntity.ok(
-            paymentFacade.payForSeat(seatPaymentRequest.userId(), seatPaymentRequest.reservationId())
+            paymentFacade.payForSeat((long)authentication.getPrincipal(), seatPaymentRequest.reservationId())
         );
     }
 }

@@ -18,7 +18,7 @@ import ms.parade.domain.concert.ConcertService;
 public class ConcertController {
     private final ConcertService concertService;
 
-    @GetMapping("/concerts/{concertId}/available-dates")
+    @GetMapping("/protected/concerts/{concertId}/available-dates")
     ResponseEntity<List<ConcertResponse>> availableDates(@PathVariable long concertId) {
         List<ConcertScheduleInfo> concertScheduleInfos = concertService.findConcertSchedulesByConcertId(concertId);
         List<ConcertResponse> concertResponses = concertScheduleInfos.stream()

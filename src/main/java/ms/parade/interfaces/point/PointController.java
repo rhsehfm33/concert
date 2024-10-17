@@ -1,8 +1,8 @@
 package ms.parade.interfaces.point;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,19 +18,19 @@ import ms.parade.application.point.UserPointResult;
 public class PointController {
     private final PointFacade pointFacade;
 
-    @GetMapping("/users/{userId}/point")
-    ResponseEntity<UserPointResponse> getUserPoint(@PathVariable long userId) {
+    @GetMapping("/protected/users/point")
+    ResponseEntity<UserPointResponse> getUserPoint(Authentication authentication) {
+        long userId = (long)authentication.getPrincipal();
         long point = pointFacade.getUserPoint(userId);
         return ResponseEntity.ok(new UserPointResponse(userId, point));
     }
 
-    @PostMapping("/users/{userId}/point")
+    @PostMapping("/protected/users/{userId}/point")
     ResponseEntity<UserPointResponse> chargeUserPoint(
-        @PathVariable long userId, @RequestBody UserPointRequest userPointRequest
+        Authentication authentication, @RequestBody UserPointRequest userPointRequest
     ) {
-        UserPointResult userPointResult = pointFacade.chargePoint(
-            userId, userPointRequest.amount()
-        );
+        long userId = (long)authentication.getPrincipal();
+        UserPointResult userPointResult = pointFacade.chargePoint(userId, userPointRequest.amount());
         return ResponseEntity.ok(new UserPointResponse(userId, userPointResult.user().point()));
     }
 }
