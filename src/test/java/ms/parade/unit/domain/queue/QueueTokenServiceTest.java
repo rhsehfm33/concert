@@ -1,4 +1,4 @@
-package ms.parade.domain.queue;
+package ms.parade.unit.domain.queue;
 
 import static org.mockito.Mockito.*;
 
@@ -11,6 +11,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import ms.parade.domain.queue.QueueToken;
+import ms.parade.domain.queue.QueueTokenInfo;
+import ms.parade.domain.queue.QueueTokenRepository;
+import ms.parade.domain.queue.QueueTokenService;
 
 @ExtendWith(MockitoExtension.class)
 public class QueueTokenServiceTest {

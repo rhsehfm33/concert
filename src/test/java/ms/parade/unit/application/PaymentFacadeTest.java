@@ -1,4 +1,4 @@
-package ms.parade.application;
+package ms.parade.unit.application;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

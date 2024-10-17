@@ -1,4 +1,4 @@
-package ms.parade.domain.concert;
+package ms.parade.unit.domain.concert;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -13,6 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import jakarta.persistence.EntityNotFoundException;
+import ms.parade.domain.concert.ConcertRepository;
+import ms.parade.domain.concert.ConcertSchedule;
+import ms.parade.domain.concert.ConcertService;
 
 @ExtendWith(MockitoExtension.class)
 public class ConcertServiceTest {
