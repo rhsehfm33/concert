@@ -35,7 +35,7 @@ public class QueueTokenService {
         return new QueueTokenInfo(queueToken, order + 1);
     }
 
-    public QueueTokenInfo findById(long uuid) {
+    public QueueTokenInfo getById(long uuid) {
         QueueToken queueToken = queueTokenRepository.findById(uuid).orElseThrow(
             () -> new IllegalArgumentException("No token found for uuid: " + uuid)
         );

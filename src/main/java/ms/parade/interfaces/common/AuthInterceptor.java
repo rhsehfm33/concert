@@ -24,7 +24,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     ) throws IllegalArgumentException {
         try {
             long uuid = Long.parseLong(request.getHeader("Authorization"));
-            QueueTokenInfo queueTokenInfo = queueTokenService.findById(uuid);
+            QueueTokenInfo queueTokenInfo = queueTokenService.getById(uuid);
 
             if (!QueueTokenStatus.PASS.equals(queueTokenInfo.queueToken().status())) {
                 throw new IllegalArgumentException("아직 대기중입니다.");
