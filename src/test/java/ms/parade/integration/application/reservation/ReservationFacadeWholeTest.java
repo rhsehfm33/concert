@@ -16,7 +16,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import ms.parade.application.reservation.ReservationFacade;
 import ms.parade.domain.concert.ConcertRepository;
 import ms.parade.domain.concert.ConcertSchedule;
-import ms.parade.domain.reservation.SeatReservationRepository;
 import ms.parade.domain.seat.Seat;
 import ms.parade.domain.seat.SeatRepository;
 import ms.parade.domain.seat.SeatStatus;
@@ -38,14 +37,11 @@ public class ReservationFacadeWholeTest {
     private ConcertRepository concertRepository;
 
     @Autowired
-    private SeatReservationRepository seatReservationRepository;
-
-    @Autowired
     private ReservationFacade reservationFacade;
 
     @Test
     public void reserveSeat_5TimesAtOnce_OnlyOneReservation() throws InterruptedException {
-        final int THREAD_COUNT = 5;
+        final int THREAD_COUNT = 100;
 
         // 사용자 데이터 설정
         for (int i = 1; i <= THREAD_COUNT; i++) {
@@ -64,8 +60,6 @@ public class ReservationFacadeWholeTest {
 
         // 데이터 세팅 완료
         // 테스트 준비
-        CountDownLatch readyLatch = new CountDownLatch(THREAD_COUNT);
-        CountDownLatch startLatch = new CountDownLatch(1);
         CountDownLatch endLatch = new CountDownLatch(THREAD_COUNT);
 
         // 테스트 성공, 실패 카운트 기록
@@ -76,29 +70,20 @@ public class ReservationFacadeWholeTest {
             long userId = i;
             executorService.submit(() -> {
                 try {
-                    readyLatch.countDown();
-                    startLatch.await();
-
                     reservationFacade.reserveSeat(userId, seat.id());
                     successCount.incrementAndGet();
                 } catch (IllegalStateException e) {
                     failureCount.incrementAndGet();
                     System.err.println(e);
-                } catch (InterruptedException e) {
-                    System.err.println(e);
                 } finally {
                     endLatch.countDown();
                 }
             });
-            Thread.sleep(20);
         }
 
-        readyLatch.await();
-        startLatch.countDown(); // 테스트 시작
         endLatch.await();
-        executorService.shutdown();
 
         assertEquals(1, successCount.get());
-        assertEquals(4, failureCount.get());
+        assertEquals(THREAD_COUNT - 1, failureCount.get());
     }
 }
