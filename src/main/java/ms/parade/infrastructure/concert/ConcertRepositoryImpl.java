@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import ms.parade.domain.concert.ConcertRepository;
 import ms.parade.domain.concert.ConcertSchedule;
@@ -28,12 +27,8 @@ public class ConcertRepositoryImpl implements ConcertRepository {
     }
 
     @Override
-    public ConcertSchedule updateScheduleAvailableSeats(long id, int availableSeats) {
-        ConcertScheduleEntity concertScheduleEntity = concertScheduleJpaRepository.findByIdForUpdate(id)
-            .orElseThrow(() -> new EntityNotFoundException("해당 콘서트 스케쥴은 존재하지 않습니다."));
-        concertScheduleEntity.setAvailableSeats(availableSeats);
-        concertScheduleEntity = concertScheduleJpaRepository.save(concertScheduleEntity);
-        return ConcertScheduleEntity.to(concertScheduleEntity);
+    public int updateScheduleAvailableSeats(long id, int amount) {
+        return concertScheduleJpaRepository.addAvailableSeats(id, amount);
     }
 
     @Override
