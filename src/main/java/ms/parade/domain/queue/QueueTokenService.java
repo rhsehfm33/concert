@@ -64,4 +64,14 @@ public class QueueTokenService {
     public void deleteById(long id) {
         queueTokenRepository.deleteById(id);
     }
+
+    public void passQueueTokens() {
+        queueTokenRepository.findFrontWaits().forEach(
+            queueToken -> update(queueToken.uuid(), QueueTokenStatus.PASS)
+        );
+    }
+
+    public void deleteQueueTokens() {
+        queueTokenRepository.findTimeoutWaits().forEach(queueToken -> deleteById(queueToken.uuid()));
+    }
 }
