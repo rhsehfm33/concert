@@ -1,7 +1,6 @@
 package ms.parade.infrastructure.concert;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -19,11 +18,6 @@ public class ConcertRepositoryImpl implements ConcertRepository {
         List<ConcertScheduleEntity> concertScheduleEntities = concertScheduleJpaRepository.findByConcertId(concertId);
 
         return concertScheduleEntities.stream().map(ConcertScheduleEntity::to).toList();
-    }
-
-    @Override
-    public Optional<ConcertSchedule> findScheduleByIdForUpdate(long id) {
-        return concertScheduleJpaRepository.findByIdForUpdate(id).map(ConcertScheduleEntity::to);
     }
 
     @Override
