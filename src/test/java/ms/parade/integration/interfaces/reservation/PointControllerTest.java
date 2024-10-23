@@ -10,18 +10,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import ms.parade.domain.point.UserPoint;
+import ms.parade.domain.point.UserPointRepository;
 import ms.parade.domain.queue.QueueToken;
 import ms.parade.domain.queue.QueueTokenRepository;
 import ms.parade.domain.queue.QueueTokenStatus;
-import ms.parade.domain.user.User;
-import ms.parade.domain.user.UserRepository;
+import ms.parade.infrastructure.point.UserPointParams;
 import ms.parade.infrastructure.queue.QueueTokenParams;
-import ms.parade.infrastructure.user.UserParams;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) // test 메서드마다 db reset
 public class PointControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -30,14 +32,16 @@ public class PointControllerTest {
     private QueueTokenRepository queueTokenRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserPointRepository userPointRepository;
 
     @Test
     public void getUserPoint_Success() throws Exception {
         LocalDateTime now = LocalDateTime.now();
-        User user = userRepository.save(new UserParams("user@gmail.com", "test"));
+        UserPoint userPoint = userPointRepository.save(new UserPointParams(1, 0));
 
-        QueueTokenParams queueTokenParams = new QueueTokenParams(user.id(), now, null, QueueTokenStatus.PASS);
+        QueueTokenParams queueTokenParams = new QueueTokenParams(
+            userPoint.userId(), now, null, QueueTokenStatus.PASS
+        );
         QueueToken queueToken = queueTokenRepository.save(queueTokenParams);
 
         mockMvc.perform(get("/v1/protected/users/point")
@@ -50,9 +54,11 @@ public class PointControllerTest {
     @Test
     public void getUserPoint_WrongUuid_Status401() throws Exception {
         LocalDateTime now = LocalDateTime.now();
-        User user = userRepository.save(new UserParams("user@gmail.com", "test"));
+        UserPoint userPoint = userPointRepository.save(new UserPointParams(1, 0));
 
-        QueueTokenParams queueTokenParams = new QueueTokenParams(user.id(), now, null, QueueTokenStatus.PASS);
+        QueueTokenParams queueTokenParams = new QueueTokenParams(
+            userPoint.userId(), now, null, QueueTokenStatus.PASS
+        );
         QueueToken queueToken = queueTokenRepository.save(queueTokenParams);
 
         mockMvc.perform(get("/v1/protected/users/point")

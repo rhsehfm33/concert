@@ -11,13 +11,13 @@ import ms.parade.domain.payment.SeatPaymentService;
 import ms.parade.domain.point.PointHistoryCommand;
 import ms.parade.domain.point.PointHistoryService;
 import ms.parade.domain.point.PointType;
+import ms.parade.domain.point.UserPointService;
 import ms.parade.domain.reservation.ReservationStatus;
 import ms.parade.domain.reservation.SeatReservation;
 import ms.parade.domain.reservation.SeatReservationService;
 import ms.parade.domain.seat.Seat;
 import ms.parade.domain.seat.SeatService;
 import ms.parade.domain.seat.SeatStatus;
-import ms.parade.domain.user.UserService;
 import ms.parade.infrastructure.payment.SeatPaymentParams;
 import ms.parade.infrastructure.point.PointHistoryParams;
 
@@ -28,7 +28,7 @@ public class PaymentFacade {
     private final SeatReservationService seatReservationService;
     private final PointHistoryService pointHistoryService;
     private final SeatService seatService;
-    private final UserService userService;
+    private final UserPointService userPointService;
     private final SeatPaymentService seatPaymentService;
 
     public SeatPayment payForSeat(long userId, long reservationId) {
@@ -53,7 +53,7 @@ public class PaymentFacade {
         }
 
         // 포인트 차감
-        userService.updatePoint(seatReservation.userId(), seat.price(), PointType.SPEND);
+        userPointService.changeUserPoint(seatReservation.userId(), seat.price(), PointType.SPEND);
 
         // 결제 내역 저장
         SeatPaymentParams seatPaymentParams = new SeatPaymentParams(

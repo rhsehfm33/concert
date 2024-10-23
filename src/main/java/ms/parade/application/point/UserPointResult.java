@@ -1,10 +1,10 @@
 package ms.parade.application.point;
 
 import ms.parade.domain.point.PointHistory;
-import ms.parade.domain.user.User;
+import ms.parade.domain.point.UserPoint;
 
 public record UserPointResult(
-    User user,
+    UserPoint userPoint,
     PointHistory pointHistory
 ) {
 }

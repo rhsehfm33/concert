@@ -16,13 +16,13 @@ import ms.parade.application.payment.PaymentFacade;
 import ms.parade.domain.payment.SeatPaymentService;
 import ms.parade.domain.point.PointHistoryService;
 import ms.parade.domain.point.PointType;
+import ms.parade.domain.point.UserPointService;
 import ms.parade.domain.reservation.ReservationStatus;
 import ms.parade.domain.reservation.SeatReservation;
 import ms.parade.domain.reservation.SeatReservationService;
 import ms.parade.domain.seat.Seat;
 import ms.parade.domain.seat.SeatService;
 import ms.parade.domain.seat.SeatStatus;
-import ms.parade.domain.user.UserService;
 
 @ExtendWith(MockitoExtension.class)
 public class PaymentFacadeTest {
@@ -36,7 +36,7 @@ public class PaymentFacadeTest {
     SeatService seatService;
 
     @Mock
-    UserService userService;
+    UserPointService userPointService;
 
     @Mock
     SeatPaymentService seatPaymentService;
@@ -91,7 +91,7 @@ public class PaymentFacadeTest {
 
         verify(seatService).findByIdForUpdate(1);
 
-        verify(userService).updatePoint(1, 1_000_00, PointType.SPEND);
+        verify(userPointService).changeUserPoint(1, 1_000_00, PointType.SPEND);
 
         verify(seatPaymentService).createSeatPayment(argThat(seatPaymentCommand ->
             seatPaymentCommand.seatPaymentParams().seatReservationId() == 1 &&

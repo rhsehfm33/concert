@@ -24,14 +24,4 @@ public class UserRepositoryImpl implements UserRepository {
         userEntity = userJpaRepository.save(userEntity);
         return UserEntity.to(userEntity);
     }
-
-    @Override
-    public User addPoint(long id, long amount) {
-        UserEntity userEntity = userJpaRepository.findById(id).orElseThrow(
-            () -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다")
-        );
-        userEntity.setPoint(userEntity.getPoint() + amount);
-        userEntity = userJpaRepository.save(userEntity);
-        return UserEntity.to(userEntity);
-    }
 }

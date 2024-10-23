@@ -7,7 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import ms.parade.domain.user.User;
 
 @Entity
@@ -23,14 +22,10 @@ public class UserEntity {
 
     private String password;
 
-    @Setter
-    private long point;
-
     public static UserEntity from(UserParams userParams) {
         UserEntity userEntity = new UserEntity();
         userEntity.email = userParams.email();
         userEntity.password = userParams.password();
-        userEntity.point = 0;
         return userEntity;
     }
 
@@ -38,8 +33,7 @@ public class UserEntity {
         return new User(
             entity.getId(),
             entity.getEmail(),
-            entity.getPassword(),
-            entity.getPoint()
+            entity.getPassword()
         );
     }
 }

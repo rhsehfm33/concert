@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import ms.parade.application.point.PointFacade;
 import ms.parade.application.point.UserPointResult;
+import ms.parade.domain.point.UserPoint;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,8 +22,8 @@ public class PointController {
     @GetMapping("/protected/users/point")
     ResponseEntity<UserPointResponse> getUserPoint(Authentication authentication) {
         long userId = (long)authentication.getPrincipal();
-        long point = pointFacade.getUserPoint(userId);
-        return ResponseEntity.ok(new UserPointResponse(userId, point));
+        UserPoint userPoint = pointFacade.getUserPoint(userId);
+        return ResponseEntity.ok(new UserPointResponse(userPoint.userId(), userPoint.point()));
     }
 
     @PostMapping("/protected/users/point")
@@ -31,6 +32,6 @@ public class PointController {
     ) {
         long userId = (long)authentication.getPrincipal();
         UserPointResult userPointResult = pointFacade.chargePoint(userId, userPointRequest.amount());
-        return ResponseEntity.ok(new UserPointResponse(userId, userPointResult.user().point()));
+        return ResponseEntity.ok(new UserPointResponse(userId, userPointResult.userPoint().point()));
     }
 }
