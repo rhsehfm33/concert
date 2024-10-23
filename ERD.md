@@ -1,2 +1,2 @@
 # ERD 테이블
-![parade (2)](https://github.com/user-attachments/assets/1bc21ae8-b63c-4b51-89ba-84a2b64bedb6)
+![parade (3)](https://github.com/user-attachments/assets/fe499a35-db63-4bc8-980b-e17b70b6824f)
