@@ -1,5 +1,7 @@
 package ms.parade.interfaces.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,6 +11,8 @@ import jakarta.persistence.EntityNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
      * 예외 문구를 ';' 토큰으로 분리해 errorType, errorMessage 추출. <br>
@@ -21,23 +25,29 @@ public class GlobalExceptionHandler {
      * @return ResponseEntity with ErrorResponse body
      */
     private ResponseEntity<ErrorResponse> toErrorResponseEntity(String exceptionMessage, HttpStatus status) {
-        // 메시지가 null 또는 빈 문자열인 경우 기본 메시지 설정
-        if (exceptionMessage == null || exceptionMessage.trim().isEmpty()) {
-            ErrorResponse errorResponse = new ErrorResponse("WRONG_ERROR_RESPONSE", "Invalid error response format");
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        ErrorResponse errorResponse = new ErrorResponse(null, null);
+        HttpStatus finalStatus = status;
+
+        // 잘못된 형식의 예외 메시지가 전달됐을 경우, 형식 오류라고 반환
+        if (exceptionMessage == null || exceptionMessage.trim().isEmpty() ||
+            exceptionMessage.split(";").length == 0 || exceptionMessage.split(";").length > 2) {
+            errorResponse = new ErrorResponse("WRONG_ERROR_RESPONSE", "Invalid error response format");
+            finalStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
         String[] errorInfo = exceptionMessage.split(";");
         if (errorInfo.length == 1) {
-            ErrorResponse errorResponse = new ErrorResponse(null, errorInfo[0].trim());
-            return new ResponseEntity<>(errorResponse, status);
+            errorResponse = new ErrorResponse(null, errorInfo[0].trim());
         } else if (errorInfo.length == 2) {
-            ErrorResponse errorResponse = new ErrorResponse(errorInfo[0].trim(), errorInfo[1].trim());
-            return new ResponseEntity<>(errorResponse, status);
-        } else {
-            ErrorResponse errorResponse = new ErrorResponse("WRONG_ERROR_RESPONSE", "Invalid error response format");
-            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            errorResponse = new ErrorResponse(errorInfo[0].trim(), errorInfo[1].trim());
         }
+
+        // 오류 내역 로깅
+        logger.error("Error Type: {}, Error Message: {}, Status: {}",
+            errorResponse.errorType(), errorResponse.errorMessage(), finalStatus
+        );
+
+        return new ResponseEntity<>(errorResponse, finalStatus);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
