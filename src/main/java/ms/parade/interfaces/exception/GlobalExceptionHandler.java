@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.persistence.EntityNotFoundException;
+import ms.parade.interfaces.common.TraceIdHolder;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -43,8 +44,8 @@ public class GlobalExceptionHandler {
         }
 
         // 오류 내역 로깅
-        logger.error("Error Type: {}, Error Message: {}, Status: {}",
-            errorResponse.errorType(), errorResponse.errorMessage(), finalStatus
+        logger.error("\nError Type: {}, Error Message: {}, Status: {}, Trace ID : {}\n",
+            errorResponse.errorType(), errorResponse.errorMessage(), finalStatus, TraceIdHolder.getTraceId()
         );
 
         return new ResponseEntity<>(errorResponse, finalStatus);
