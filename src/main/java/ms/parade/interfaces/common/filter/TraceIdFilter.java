@@ -1,4 +1,4 @@
-package ms.parade.interfaces.common;
+package ms.parade.interfaces.common.filter;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -11,6 +11,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ms.parade.interfaces.common.util.TraceIdHolder;
 
 public class TraceIdFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(OncePerRequestFilter.class);
