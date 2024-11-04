@@ -31,7 +31,7 @@ public class QueueTokenService {
         );
         QueueToken queueToken = queueTokenRepository.save(queueTokenParams);
 
-        int order = queueTokenRepository.getWaitOrderByTime(queueToken.createdAt());
+        int order = queueTokenRepository.countCreatedAtBefore(queueToken.uuid());
         return new QueueTokenInfo(queueToken, order + 1);
     }
 
@@ -39,7 +39,7 @@ public class QueueTokenService {
         QueueToken queueToken = queueTokenRepository.findById(uuid).orElseThrow(
             () -> new IllegalArgumentException("UUID_NOT_EXIST; No token found for uuid: " + uuid)
         );
-        int order = queueTokenRepository.getWaitOrderByTime(queueToken.createdAt());
+        int order = queueTokenRepository.countCreatedAtBefore(queueToken.uuid());
         return new QueueTokenInfo(queueToken, order + 1);
     }
 
@@ -56,8 +56,8 @@ public class QueueTokenService {
             .toList();
     }
 
-    public QueueTokenInfo update(long uuid, QueueTokenStatus queueTokenStatus) {
-        QueueToken queueToken = queueTokenRepository.updateStatus(uuid, queueTokenStatus);
+    public QueueTokenInfo passToken(long uuid) {
+        QueueToken queueToken = queueTokenRepository.updateAsPassed(uuid);
         return new QueueTokenInfo(queueToken, 0);
     }
 
@@ -67,7 +67,7 @@ public class QueueTokenService {
 
     public void passQueueTokens() {
         queueTokenRepository.findFrontWaits().forEach(
-            queueToken -> update(queueToken.uuid(), QueueTokenStatus.PASS)
+            queueToken -> passToken(queueToken.uuid())
         );
     }
 

@@ -17,13 +17,13 @@ public class QueueTokenFacade {
     @Transactional
     public QueueResult putUnique(long userId) {
         userService.findById(userId).orElseThrow(
-            () -> new EntityNotFoundException("SEAT_NOT_EXIST; 존재하지 않는 좌석입니다.")
+            () -> new EntityNotFoundException("SEAT_NOT_EXIST; 존재하지 사용자입니다.")
         );
         return new QueueResult(queueTokenService.putUnique(userId));
     }
 
     @Transactional
-    public QueueResult getById(long userId) {
-        return new QueueResult(queueTokenService.getById(userId));
+    public QueueResult getById(long uuid) {
+        return new QueueResult(queueTokenService.getById(uuid));
     }
 }
