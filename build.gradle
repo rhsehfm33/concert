@@ -31,6 +31,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+//    implementation 'net.datafaker:datafaker:1.5.0' // 더미 데이터 생성 시 사용
 }
 
 tasks.named('test') {
