@@ -1,5 +1,6 @@
 package ms.parade.infrastructure.queue;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -19,7 +20,13 @@ public class QueueTokenRepositoryImpl implements QueueTokenRepository {
 
     @Override
     public QueueToken save(QueueTokenParams queueTokenParams) {
-        QueueTokenEntity queueTokenEntity = QueueTokenEntity.from(queueTokenParams);
+        Instant now = Instant.now();
+
+        long epochSecond = now.getEpochSecond();
+        int nanoAdjustment = now.getNano();
+        long totalNanoseconds = epochSecond * 1_000_000_000L + nanoAdjustment;
+
+        QueueTokenEntity queueTokenEntity = QueueTokenEntity.from(totalNanoseconds, queueTokenParams);
         queueTokenEntity = queueTokenRedisRepository.save(queueTokenEntity);
         return QueueTokenEntity.to(queueTokenEntity);
     }

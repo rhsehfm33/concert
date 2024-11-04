@@ -6,8 +6,6 @@ import org.springframework.data.redis.core.RedisHash;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +18,6 @@ import ms.parade.domain.queue.QueueTokenStatus;
 @NoArgsConstructor
 public class QueueTokenEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private long userId;
@@ -34,8 +31,9 @@ public class QueueTokenEntity {
     @Setter
     private LocalDateTime updatedAt;
 
-    public static QueueTokenEntity from(QueueTokenParams queueTokenParams) {
+    public static QueueTokenEntity from(long id, QueueTokenParams queueTokenParams) {
         QueueTokenEntity tokenEntity = new QueueTokenEntity();
+        tokenEntity.id = id;
         tokenEntity.userId = queueTokenParams.userId();
         tokenEntity.status = queueTokenParams.status();
         tokenEntity.createdAt = queueTokenParams.createdAt();
