@@ -8,26 +8,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import ms.parade.domain.queue.QueueTokenInfo;
-import ms.parade.domain.queue.QueueTokenService;
+import ms.parade.application.queue.QueueResult;
+import ms.parade.application.queue.QueueTokenFacade;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/queue-tokens")
 public class QueueTokenController {
-    private final QueueTokenService queueTokenService;
+    private final QueueTokenFacade queueTokenFacade;
 
     @GetMapping("/{uuid}")
     ResponseEntity<QueueTokenResponse> getQueueToken(@PathVariable long uuid) {
-        QueueTokenInfo queueTokenInfo = queueTokenService.getById(uuid);
-        QueueTokenResponse queueTokenResponse = new QueueTokenResponse(queueTokenInfo);
+        QueueResult queueResult = queueTokenFacade.getById(uuid);
+        QueueTokenResponse queueTokenResponse = new QueueTokenResponse(queueResult);
         return ResponseEntity.ok(queueTokenResponse);
     }
 
     @PostMapping("/{userId}")
     ResponseEntity<QueueTokenResponse> putQueueToken(@PathVariable long userId) {
-        QueueTokenInfo queueTokenInfo = queueTokenService.putUnique(userId);
-        QueueTokenResponse queueTokenResponse = new QueueTokenResponse(queueTokenInfo);
+        QueueResult queueResult = queueTokenFacade.putUnique(userId);
+        QueueTokenResponse queueTokenResponse = new QueueTokenResponse(queueResult);
         return ResponseEntity.ok(queueTokenResponse);
     }
 

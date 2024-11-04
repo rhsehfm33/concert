@@ -1,8 +1,8 @@
 package ms.parade.interfaces.queue;
 
-import ms.parade.domain.queue.QueueTokenInfo;
+import ms.parade.application.queue.QueueResult;
 
 public record QueueTokenResponse(
-    QueueTokenInfo queueTokenInfo
+    QueueResult queueResult
 ) {
 }
