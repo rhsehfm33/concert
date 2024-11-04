@@ -2,22 +2,21 @@ package ms.parade.infrastructure.queue;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
+import org.springframework.data.redis.core.RedisHash;
+
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ms.parade.domain.queue.QueueToken;
 import ms.parade.domain.queue.QueueTokenStatus;
 
-@Entity
 @Getter
-@Table(name = "queue_tokens")
+@RedisHash("queue_tokens")
 @NoArgsConstructor
 public class QueueTokenEntity {
     @Id
