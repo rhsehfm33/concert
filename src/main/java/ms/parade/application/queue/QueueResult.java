@@ -6,7 +6,7 @@ import ms.parade.domain.queue.QueueTokenInfo;
 import ms.parade.domain.queue.QueueTokenStatus;
 
 public record QueueResult(
-    long uuid,
+    String uuid,
     long userId,
     QueueTokenStatus status,
     LocalDateTime createdAt,

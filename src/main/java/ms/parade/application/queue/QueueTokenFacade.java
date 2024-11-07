@@ -23,7 +23,7 @@ public class QueueTokenFacade {
     }
 
     @Transactional
-    public QueueResult getById(long uuid) {
+    public QueueResult getById(String uuid) {
         return new QueueResult(queueTokenService.getById(uuid));
     }
 }

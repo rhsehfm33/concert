@@ -7,11 +7,11 @@ import ms.parade.infrastructure.queue.QueueTokenParams;
 
 public interface QueueTokenRepository {
     QueueToken save(QueueTokenParams queueTokenParams);
-    QueueToken updateAsPassed(long id);
-    int countCreatedAtBefore(long id);
-    Optional<QueueToken> findById(long id);
+    QueueToken updateAsPassed(String id);
+    int countCreatedAtBefore(String id);
+    Optional<QueueToken> findById(String id);
     Optional<QueueToken> findByUserId(long userId);
-    void deleteById(long id);
+    void deleteById(String id);
     List<QueueToken> findFrontWaits();
     List<QueueToken> findTimeoutWaits();
 }

@@ -14,16 +14,16 @@ public class PassedQueueTokenRepository {
     private static final String SORTED_SET_KEY = "passed_queue_tokens";
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void addToSortedSet(long id) {
-        redisTemplate.opsForZSet().add(SORTED_SET_KEY, id, id);
+    public void addToSortedSet(String uuid, long timeStamp) {
+        redisTemplate.opsForZSet().add(SORTED_SET_KEY, uuid, timeStamp);
     }
 
-    public void removeFromSortedSet(long id) {
-        redisTemplate.opsForZSet().remove(SORTED_SET_KEY, id);
+    public void removeFromSortedSet(String uuid) {
+        redisTemplate.opsForZSet().remove(SORTED_SET_KEY, uuid);
     }
 
-    public Set<Long> getTopIds(int count) {
+    public Set<String > getTopIds(int count) {
         Set<Object> latestIds = redisTemplate.opsForZSet().range(SORTED_SET_KEY, 0, count - 1);
-        return latestIds != null ? latestIds.stream().map(id -> (Long) id).collect(Collectors.toSet()) : Set.of();
+        return latestIds != null ? latestIds.stream().map(id -> (String) id).collect(Collectors.toSet()) : Set.of();
     }
 }

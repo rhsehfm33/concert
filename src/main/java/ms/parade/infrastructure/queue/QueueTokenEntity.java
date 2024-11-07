@@ -2,11 +2,11 @@ package ms.parade.infrastructure.queue;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +18,7 @@ import ms.parade.domain.queue.QueueTokenStatus;
 @NoArgsConstructor
 public class QueueTokenEntity {
     @Id
-    private long id;
+    private String uuid;
 
     private long userId;
 
@@ -31,9 +31,9 @@ public class QueueTokenEntity {
     @Setter
     private LocalDateTime updatedAt;
 
-    public static QueueTokenEntity from(long id, QueueTokenParams queueTokenParams) {
+    public static QueueTokenEntity from(String uuid, QueueTokenParams queueTokenParams) {
         QueueTokenEntity tokenEntity = new QueueTokenEntity();
-        tokenEntity.id = id;
+        tokenEntity.uuid = uuid;
         tokenEntity.userId = queueTokenParams.userId();
         tokenEntity.status = queueTokenParams.status();
         tokenEntity.createdAt = queueTokenParams.createdAt();
@@ -43,7 +43,7 @@ public class QueueTokenEntity {
 
     public static QueueToken to(QueueTokenEntity queueTokenEntity) {
         return new QueueToken(
-            queueTokenEntity.id,
+            queueTokenEntity.uuid,
             queueTokenEntity.userId,
             queueTokenEntity.status,
             queueTokenEntity.createdAt,

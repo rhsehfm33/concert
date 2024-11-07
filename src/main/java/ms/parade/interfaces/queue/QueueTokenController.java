@@ -18,7 +18,7 @@ public class QueueTokenController {
     private final QueueTokenFacade queueTokenFacade;
 
     @GetMapping("/{uuid}")
-    ResponseEntity<QueueTokenResponse> getQueueToken(@PathVariable long uuid) {
+    ResponseEntity<QueueTokenResponse> getQueueToken(@PathVariable String uuid) {
         QueueResult queueResult = queueTokenFacade.getById(uuid);
         QueueTokenResponse queueTokenResponse = new QueueTokenResponse(queueResult);
         return ResponseEntity.ok(queueTokenResponse);

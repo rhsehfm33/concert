@@ -12,7 +12,7 @@ public class QueueTokenUserIdRepository {
     private final RedisTemplate<String, Object> redisTemplate;
 
     // <user id, uuid> 추가
-    public void addId(long userId, long uuid) {
+    public void addId(long userId, String uuid) {
         redisTemplate.opsForHash().put(HASH_KEY, String.valueOf(userId), uuid);
     }
 
@@ -22,7 +22,7 @@ public class QueueTokenUserIdRepository {
     }
 
     // 특정 ID가 존재하는지 확인
-    public Long getIdValue(long id) {
-        return (Long) redisTemplate.opsForHash().get(HASH_KEY, String.valueOf(id));
+    public String getIdValue(long userId) {
+        return (String) redisTemplate.opsForHash().get(HASH_KEY, String.valueOf(userId));
     }
 }

@@ -23,7 +23,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler
     ) throws IllegalArgumentException {
         try {
-            long uuid = Long.parseLong(request.getHeader("Authorization"));
+            String uuid = request.getHeader("Authorization");
             QueueTokenInfo queueTokenInfo = queueTokenService.getById(uuid);
 
             if (!QueueTokenStatus.PASS.equals(queueTokenInfo.queueToken().status())) {

@@ -27,7 +27,7 @@ public class QueueTokenServiceTest {
 
     @Test
     public void putUnique_AlreadyExists_IllegalArgumentException() {
-        QueueToken queueToken = new QueueToken(1, 1, null, null, null);
+        QueueToken queueToken = new QueueToken("1", 1, null, null, null);
         when(queueTokenRepository.findByUserId(1)).thenReturn(Optional.of(queueToken));
         Assertions.assertThrows(IllegalArgumentException.class,
             () -> queueTokenService.putUnique(1));
@@ -35,8 +35,8 @@ public class QueueTokenServiceTest {
 
     @Test
     public void findFrontWaits_2QueueTokens_OrderOf1And2() {
-        QueueToken queueToken1 = new QueueToken(1, 1, null, null, null);
-        QueueToken queueToken2 = new QueueToken(2, 1, null, null, null);
+        QueueToken queueToken1 = new QueueToken("1", 1, null, null, null);
+        QueueToken queueToken2 = new QueueToken("2", 1, null, null, null);
         List<QueueToken> queueTokens = List.of(queueToken1, queueToken2);
         when(queueTokenRepository.findFrontWaits()).thenReturn(queueTokens);
 

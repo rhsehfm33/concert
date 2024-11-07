@@ -35,7 +35,7 @@ public class QueueTokenService {
         return new QueueTokenInfo(queueToken, order + 1);
     }
 
-    public QueueTokenInfo getById(long uuid) {
+    public QueueTokenInfo getById(String uuid) {
         QueueToken queueToken = queueTokenRepository.findById(uuid).orElseThrow(
             () -> new IllegalArgumentException("UUID_NOT_EXIST; No token found for uuid: " + uuid)
         );
@@ -50,19 +50,13 @@ public class QueueTokenService {
             .toList();
     }
 
-    public List<QueueTokenInfo> findTimeoutPasses() {
-        return queueTokenRepository.findTimeoutWaits().stream()
-            .map(queueToken -> new QueueTokenInfo(queueToken, -1))
-            .toList();
-    }
-
-    public QueueTokenInfo passToken(long uuid) {
+    public QueueTokenInfo passToken(String uuid) {
         QueueToken queueToken = queueTokenRepository.updateAsPassed(uuid);
         return new QueueTokenInfo(queueToken, 0);
     }
 
-    public void deleteById(long id) {
-        queueTokenRepository.deleteById(id);
+    public void deleteById(String uuid) {
+        queueTokenRepository.deleteById(uuid);
     }
 
     public void passQueueTokens() {
