@@ -1,12 +1,15 @@
 package ms.parade.infrastructure.queue;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.StreamSupport;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
@@ -17,10 +20,10 @@ import ms.parade.domain.queue.QueueTokenStatus;
 @Repository
 @RequiredArgsConstructor
 public class QueueTokenRepositoryImpl implements QueueTokenRepository {
-    private static final String QUEUE_TOKEN_KEY = "queue_token_id";
-
+    private static final String QUEUE_TOKEN_KEY = "queue_tokens";
     private final QueueTokenCrudRepository queueTokenCrudRepository;
 
+    private final RedisTemplate<String, Object> redisTemplate;
     private final WaitingQueueTokenRepository waitingQueueTokenRepository;
     private final PassedQueueTokenRepository passedQueueTokenRepository;
     private final QueueTokenUserIdRepository queueTokenUserIdRepository;
@@ -29,7 +32,7 @@ public class QueueTokenRepositoryImpl implements QueueTokenRepository {
     public QueueToken save(QueueTokenParams queueTokenParams) {
         String newId = UUID.randomUUID().toString();
         QueueTokenEntity queueTokenEntity = QueueTokenEntity.from(newId, queueTokenParams);
-        queueTokenEntity = queueTokenCrudRepository.save(queueTokenEntity);
+        redisTemplate.opsForHash().put(QUEUE_TOKEN_KEY, newId, queueTokenEntity);
         waitingQueueTokenRepository.addToSortedSet(newId, System.currentTimeMillis());
         queueTokenUserIdRepository.addId(queueTokenEntity.getUserId(), newId);
         return QueueTokenEntity.to(queueTokenEntity);
@@ -41,7 +44,7 @@ public class QueueTokenRepositoryImpl implements QueueTokenRepository {
             () -> new IllegalArgumentException("존재하지 않는 토큰입니다.")
         );
         queueTokenEntity.setStatus(QueueTokenStatus.PASS);
-        queueTokenEntity.setUpdatedAt(LocalDateTime.now());
+        queueTokenEntity.setUpdatedAt(System.currentTimeMillis());
         queueTokenCrudRepository.save(queueTokenEntity);
         waitingQueueTokenRepository.removeFromSortedSet(uuid);
         passedQueueTokenRepository.addToSortedSet(uuid, System.currentTimeMillis());
@@ -56,8 +59,8 @@ public class QueueTokenRepositoryImpl implements QueueTokenRepository {
 
     @Override
     public Optional<QueueToken> findById(String id) {
-        Optional<QueueTokenEntity> queueTokenEntity = queueTokenCrudRepository.findById(id);
-        return queueTokenEntity.map(QueueTokenEntity::to);
+        QueueTokenEntity queueTokenEntity = (QueueTokenEntity) redisTemplate.opsForHash().get(QUEUE_TOKEN_KEY, id);
+        return  Optional.ofNullable(queueTokenEntity).map(QueueTokenEntity::to);
     }
 
     @Override
@@ -94,7 +97,13 @@ public class QueueTokenRepositoryImpl implements QueueTokenRepository {
         LocalDateTime now = LocalDateTime.now();
         Set<String> latestIds = passedQueueTokenRepository.getTopIds(30);
         return StreamSupport.stream(queueTokenCrudRepository.findAllById(latestIds).spliterator(), false)
-            .filter(queueTokenEntity -> now.minusMinutes(20L).isBefore(queueTokenEntity.getCreatedAt()))
+            .filter(queueTokenEntity -> {
+                    LocalDateTime updatedAt =  LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(queueTokenEntity.getUpdatedAt()), ZoneId.systemDefault()
+                    );
+                    return now.minusMinutes(20L).isBefore(updatedAt);
+                }
+            )
             .map(QueueTokenEntity::to)
             .toList();
     }

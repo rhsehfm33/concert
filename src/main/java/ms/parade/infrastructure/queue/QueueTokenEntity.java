@@ -1,6 +1,8 @@
 package ms.parade.infrastructure.queue;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
@@ -26,18 +28,18 @@ public class QueueTokenEntity {
     @Enumerated(EnumType.STRING)
     private QueueTokenStatus status;
 
-    private LocalDateTime createdAt;
+    private long createdAt;
 
     @Setter
-    private LocalDateTime updatedAt;
+    private long updatedAt;
 
     public static QueueTokenEntity from(String uuid, QueueTokenParams queueTokenParams) {
         QueueTokenEntity tokenEntity = new QueueTokenEntity();
         tokenEntity.uuid = uuid;
         tokenEntity.userId = queueTokenParams.userId();
         tokenEntity.status = queueTokenParams.status();
-        tokenEntity.createdAt = queueTokenParams.createdAt();
-        tokenEntity.updatedAt = queueTokenParams.updatedAt();
+        tokenEntity.createdAt = queueTokenParams.createdAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        tokenEntity.updatedAt = tokenEntity.createdAt;
         return tokenEntity;
     }
 
@@ -46,8 +48,8 @@ public class QueueTokenEntity {
             queueTokenEntity.uuid,
             queueTokenEntity.userId,
             queueTokenEntity.status,
-            queueTokenEntity.createdAt,
-            queueTokenEntity.updatedAt
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(queueTokenEntity.getCreatedAt()), ZoneId.systemDefault()),
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(queueTokenEntity.getUpdatedAt()), ZoneId.systemDefault())
         );
     }
 }

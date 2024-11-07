@@ -6,13 +6,11 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ms.parade.infrastructure.queue.QueueTokenParams;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class QueueTokenService {
     private final QueueTokenRepository queueTokenRepository;
