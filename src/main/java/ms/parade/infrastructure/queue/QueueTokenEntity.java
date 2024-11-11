@@ -1,28 +1,26 @@
 package ms.parade.infrastructure.queue;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
-import jakarta.persistence.Entity;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ms.parade.domain.queue.QueueToken;
 import ms.parade.domain.queue.QueueTokenStatus;
 
-@Entity
 @Getter
-@Table(name = "queue_tokens")
+@RedisHash("queue_tokens")
 @NoArgsConstructor
 public class QueueTokenEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private String uuid;
 
     private long userId;
 
@@ -30,27 +28,28 @@ public class QueueTokenEntity {
     @Enumerated(EnumType.STRING)
     private QueueTokenStatus status;
 
-    private LocalDateTime createdAt;
+    private long createdAt;
 
     @Setter
-    private LocalDateTime updatedAt;
+    private long updatedAt;
 
-    public static QueueTokenEntity from(QueueTokenParams queueTokenParams) {
+    public static QueueTokenEntity from(String uuid, QueueTokenParams queueTokenParams) {
         QueueTokenEntity tokenEntity = new QueueTokenEntity();
+        tokenEntity.uuid = uuid;
         tokenEntity.userId = queueTokenParams.userId();
         tokenEntity.status = queueTokenParams.status();
-        tokenEntity.createdAt = queueTokenParams.createdAt();
-        tokenEntity.updatedAt = queueTokenParams.updatedAt();
+        tokenEntity.createdAt = queueTokenParams.createdAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        tokenEntity.updatedAt = tokenEntity.createdAt;
         return tokenEntity;
     }
 
     public static QueueToken to(QueueTokenEntity queueTokenEntity) {
         return new QueueToken(
-            queueTokenEntity.id,
+            queueTokenEntity.uuid,
             queueTokenEntity.userId,
             queueTokenEntity.status,
-            queueTokenEntity.createdAt,
-            queueTokenEntity.updatedAt
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(queueTokenEntity.getCreatedAt()), ZoneId.systemDefault()),
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(queueTokenEntity.getUpdatedAt()), ZoneId.systemDefault())
         );
     }
 }
