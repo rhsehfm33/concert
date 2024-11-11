@@ -6,13 +6,11 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ms.parade.infrastructure.queue.QueueTokenParams;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class QueueTokenService {
     private final QueueTokenRepository queueTokenRepository;
@@ -31,15 +29,15 @@ public class QueueTokenService {
         );
         QueueToken queueToken = queueTokenRepository.save(queueTokenParams);
 
-        int order = queueTokenRepository.getWaitOrderByTime(queueToken.createdAt());
+        int order = queueTokenRepository.countCreatedAtBefore(queueToken.uuid());
         return new QueueTokenInfo(queueToken, order + 1);
     }
 
-    public QueueTokenInfo getById(long uuid) {
+    public QueueTokenInfo getById(String uuid) {
         QueueToken queueToken = queueTokenRepository.findById(uuid).orElseThrow(
             () -> new IllegalArgumentException("UUID_NOT_EXIST; No token found for uuid: " + uuid)
         );
-        int order = queueTokenRepository.getWaitOrderByTime(queueToken.createdAt());
+        int order = queueTokenRepository.countCreatedAtBefore(queueToken.uuid());
         return new QueueTokenInfo(queueToken, order + 1);
     }
 
@@ -50,24 +48,18 @@ public class QueueTokenService {
             .toList();
     }
 
-    public List<QueueTokenInfo> findTimeoutPasses() {
-        return queueTokenRepository.findTimeoutWaits().stream()
-            .map(queueToken -> new QueueTokenInfo(queueToken, -1))
-            .toList();
-    }
-
-    public QueueTokenInfo update(long uuid, QueueTokenStatus queueTokenStatus) {
-        QueueToken queueToken = queueTokenRepository.updateStatus(uuid, queueTokenStatus);
+    public QueueTokenInfo passToken(String uuid) {
+        QueueToken queueToken = queueTokenRepository.updateAsPassed(uuid);
         return new QueueTokenInfo(queueToken, 0);
     }
 
-    public void deleteById(long id) {
-        queueTokenRepository.deleteById(id);
+    public void deleteById(String uuid) {
+        queueTokenRepository.deleteById(uuid);
     }
 
     public void passQueueTokens() {
         queueTokenRepository.findFrontWaits().forEach(
-            queueToken -> update(queueToken.uuid(), QueueTokenStatus.PASS)
+            queueToken -> passToken(queueToken.uuid())
         );
     }
 
