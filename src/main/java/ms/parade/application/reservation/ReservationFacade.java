@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import ms.parade.domain.concert.ConcertService;
-import ms.parade.domain.reservation.ReservationStatus;
 import ms.parade.domain.reservation.SeatReservation;
 import ms.parade.domain.reservation.SeatReservationService;
 import ms.parade.domain.seat.Seat;
@@ -64,7 +63,7 @@ public class ReservationFacade {
             .stream().sorted(Comparator.comparingLong(Seat::id)).toList();
 
         for (int i = 0; i < seats.size(); ++i) {
-            seatReservationService.updateStatus(seatReservations.get(i).id(), ReservationStatus.CANCEL);
+            seatReservationService.cancelReservation(seatReservations.get(i).id(), seatReservations.get(i).userId());
             seatService.updateStatus(seats.get(i).id(), SeatStatus.EMPTY);
             concertService.addAvailableSeats(seats.get(i).scheduleId(), 1);
         }
