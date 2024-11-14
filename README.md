@@ -12,3 +12,5 @@
 # [동시성 이슈 분석](https://sleeping-cat.tistory.com/27)
 
 # [레디스 최적화 성능 분석](https://sleeping-cat.tistory.com/28)
+
+# [인덱스 적용 & 성능 분석](https://sleeping-cat.tistory.com/29)
