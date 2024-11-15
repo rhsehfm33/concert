@@ -17,14 +17,12 @@ public class ReservationEventListener {
     private final OutboxService outboxService;
     private final ReservationDataProcessor reservationDataProcessor;
 
-    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void publishInReservationData(SeatReservationEvent seatReservationEvent)
-        throws JsonProcessingException {
-        outboxService.createOutbox(seatReservationEvent);
-    }
-
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void publishOutReservationData(SeatReservationEvent seatReservationEvent) {
-        reservationDataProcessor.processEvent(seatReservationEvent);
+    public void publishOutReservationData(SeatReservationEvent seatReservationEvent) throws JsonProcessingException {
+        try {
+            reservationDataProcessor.processEvent(seatReservationEvent);
+        } catch (Exception e) {
+            outboxService.createOutbox(seatReservationEvent);
+        }
     }
 }

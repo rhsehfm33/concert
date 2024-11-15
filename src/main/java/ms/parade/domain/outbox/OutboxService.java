@@ -57,6 +57,7 @@ public class OutboxService {
         for (OutboxModel outboxModel : outboxModels) {
             Object event = extractEvent(outboxModel);
             eventPublisher.publishEvent(event);
+            markAsProcessed(outboxModel.id());
         }
     }
 }
