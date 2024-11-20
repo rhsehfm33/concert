@@ -14,8 +14,10 @@ public class OutboxRepositoryImpl implements OutboxRepository {
     private final OutboxJpaRepository outboxJpaRepository;
 
     @Override
-    public OutboxModel createOutbox(String eventType, String eventData) {
-        OutboxEntity outboxEntity = outboxJpaRepository.save(new OutboxEntity(eventType, eventData));
+    public OutboxModel createOutbox(OutboxParams outboxParams) {
+        OutboxEntity outboxEntity = outboxJpaRepository.save(
+            new OutboxEntity(outboxParams.topic(), outboxParams.key(), outboxParams.eventType(), outboxParams.eventData())
+        );
         return outboxEntity.toModel();
     }
 

@@ -5,16 +5,20 @@ import java.time.LocalDateTime;
 import ms.parade.infrastructure.outbox.OutboxModel;
 import ms.parade.infrastructure.outbox.OutboxStatus;
 
-public record Outbox(
+public record OutboxInfo(
     long id,
+    String eventTopic,
+    String eventKey,
     String eventType,
     String eventData,
     LocalDateTime createdAt,
     OutboxStatus outboxStatus
 ) {
-    public Outbox(OutboxModel outboxModel) {
+    public OutboxInfo(OutboxModel outboxModel) {
         this(
             outboxModel.id(),
+            outboxModel.eventTopic(),
+            outboxModel.eventKey(),
             outboxModel.eventType(),
             outboxModel.eventData(),
             outboxModel.createdAt(),

@@ -1,5 +1,6 @@
 package ms.parade.domain.outbox;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import ms.parade.infrastructure.outbox.OutboxModel;
+import ms.parade.infrastructure.outbox.OutboxParams;
 import ms.parade.infrastructure.outbox.OutboxStatus;
 
 @Service
@@ -27,37 +29,38 @@ public class OutboxService {
         objectMapper.registerModule(new JavaTimeModule());
     }
 
-    private Object extractEvent(OutboxModel outboxModel)
+    public Object extractEvent(String eventType, String eventData)
         throws JsonProcessingException, ClassNotFoundException {
-        String eventType = outboxModel.eventType();
-        String eventData = outboxModel.eventData();
-        Class<?> eventClass = null;
-        eventClass = Class.forName(eventType);
+        Class<?> eventClass = Class.forName(eventType);
         return objectMapper.readValue(eventData, eventClass);
     }
 
     @Transactional
-    public Outbox createOutbox(Object event) throws JsonProcessingException {
-        String eventType = event.getClass().getName();
-        String eventData = objectMapper.writeValueAsString(event); // 이벤트를 JSON으로 직렬화하는 메서드
-        OutboxModel outboxModel = outboxRepository.createOutbox(eventType, eventData);
-        return new Outbox(outboxModel);
+    public OutboxInfo createOutbox(OutboxCommand outboxCommand) throws JsonProcessingException {
+        String eventTopic = outboxCommand.eventTopic();
+        String key = outboxCommand.eventKey();
+        String eventType = outboxCommand.eventData().getClass().getName();
+        String eventData = objectMapper.writeValueAsString(outboxCommand.eventData()); // 이벤트를 JSON으로 직렬화하는 메서드
+        OutboxParams outboxParams = new OutboxParams(eventTopic, key, eventType, eventData);
+        OutboxModel outboxModel = outboxRepository.createOutbox(outboxParams);
+        return new OutboxInfo(outboxModel);
     }
 
     @Transactional
-    public Outbox markAsProcessed(long outboxId) {
-        OutboxModel outboxModel = outboxRepository.updateStatus(outboxId, OutboxStatus.PROCESSED);
-        return new Outbox(outboxModel);
+    public OutboxInfo changeStatus(long outboxId, OutboxStatus status) {
+        OutboxModel outboxModel = outboxRepository.updateStatus(outboxId, status);
+        return new OutboxInfo(outboxModel);
     }
 
     @Transactional
     public void processPendingOutboxEvents() throws JsonProcessingException, ClassNotFoundException {
-        List<OutboxModel> outboxModels = outboxRepository.findAllByStatus(OutboxStatus.PENDING);
+        List<OutboxModel> outboxModels = outboxRepository.findAllByStatus(OutboxStatus.INIT);
 
         for (OutboxModel outboxModel : outboxModels) {
-            Object event = extractEvent(outboxModel);
-            eventPublisher.publishEvent(event);
-            markAsProcessed(outboxModel.id());
+            Object event = extractEvent(outboxModel.eventType(), outboxModel.eventData());
+            if (outboxModel.createdAt().isBefore(LocalDateTime.now())) {
+                eventPublisher.publishEvent(event);
+            }
         }
     }
 }

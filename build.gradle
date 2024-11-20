@@ -27,6 +27,7 @@ dependencies {
     implementation 'org.redisson:redisson-spring-boot-starter:3.23.5'
     implementation 'io.github.tobi-laa:spring-boot-embedded-redis:1.0.1' // embedded redis
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
