@@ -58,7 +58,7 @@ public class OutboxService {
 
         for (OutboxModel outboxModel : outboxModels) {
             Object event = extractEvent(outboxModel.eventType(), outboxModel.eventData());
-            if (outboxModel.createdAt().isBefore(LocalDateTime.now())) {
+            if (outboxModel.createdAt().isBefore(LocalDateTime.now().minusMinutes(5))) {
                 eventPublisher.publishEvent(event);
             }
         }
