@@ -21,7 +21,7 @@ public class ReservationEventConsumer {
     private final ObjectMapper objectMapper;
 
     @KafkaListener(topics = ReservationKafkaConfig.SEAT_RESERVATION_TOPIC, groupId = "seat-consumer-group1")
-    public void listen(ConsumerRecord<String, String> record) throws JsonProcessingException, ClassNotFoundException {
+    public void listen(ConsumerRecord<String, String> record) throws JsonProcessingException {
         OutboxEventWrapper<SeatReservationEvent> outboxEventWrapper = objectMapper.readValue(
             record.value(), OutboxEventWrapper.class
         );
