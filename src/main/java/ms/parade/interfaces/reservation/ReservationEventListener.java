@@ -1,5 +1,7 @@
 package ms.parade.interfaces.reservation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,8 @@ import ms.parade.infrastructure.reservation.ReservationKafkaConfig;
 @Service
 @RequiredArgsConstructor
 public class ReservationEventListener {
+    private static final Logger logger = LoggerFactory.getLogger(ReservationEventListener.class);
+
     private final OutboxService outboxService;
     private final ReservationEventProducer reservationEventProducer;
 
@@ -33,8 +37,17 @@ public class ReservationEventListener {
             SeatReservationEvent.class.getName(),
             seatReservationEvent
         );
-        OutboxInfo outboxInfo = outboxService.createOutbox(outboxCommand);
-        OutboxEventWrapper<SeatReservationEvent> outboxEventWrapper = new OutboxEventWrapper<SeatReservationEvent>(
+
+        OutboxInfo outboxInfo = null;
+        try {
+            outboxInfo = outboxService.createOutbox(outboxCommand);
+        } catch (JsonProcessingException e) {
+            logger.error(" 좌석 예약[id:{}] outbox 저장에 실패했습니다.", seatReservationEvent.reservationId());
+            logger.error(e.getMessage());
+            throw e;
+        }
+
+        OutboxEventWrapper<SeatReservationEvent> outboxEventWrapper = new OutboxEventWrapper<>(
             outboxInfo.id(),
             seatReservationEvent
         );
