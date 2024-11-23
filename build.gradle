@@ -26,6 +26,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
     implementation 'org.redisson:redisson-spring-boot-starter:3.23.5'
     implementation 'io.github.tobi-laa:spring-boot-embedded-redis:1.0.1' // embedded redis
+    implementation 'org.springframework.kafka:spring-kafka'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
