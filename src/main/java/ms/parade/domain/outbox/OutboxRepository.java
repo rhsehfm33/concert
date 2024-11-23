@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import ms.parade.infrastructure.outbox.OutboxModel;
+import ms.parade.infrastructure.outbox.OutboxParams;
 import ms.parade.infrastructure.outbox.OutboxStatus;
 
 public interface OutboxRepository {
-    OutboxModel createOutbox(String eventType, String eventData);
+    OutboxModel createOutbox(OutboxParams outboxParams);
 
     List<OutboxModel> findAllByStatus(OutboxStatus outboxStatus);
 
