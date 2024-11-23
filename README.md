@@ -14,3 +14,5 @@
 # [레디스 최적화 성능 분석](https://sleeping-cat.tistory.com/28)
 
 # [인덱스 적용 & 성능 분석](https://sleeping-cat.tistory.com/29)
+
+# [분산 트랜잭션 설계 문서](https://sleeping-cat.tistory.com/30)

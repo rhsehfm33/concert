@@ -1,5 +1,8 @@
 package ms.parade.application.payment;
 
+import java.time.LocalDateTime;
+
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +16,7 @@ import ms.parade.domain.point.PointHistoryService;
 import ms.parade.domain.point.PointType;
 import ms.parade.domain.point.UserPointService;
 import ms.parade.domain.reservation.SeatReservation;
+import ms.parade.domain.reservation.SeatReservationEvent;
 import ms.parade.domain.reservation.SeatReservationService;
 import ms.parade.domain.seat.Seat;
 import ms.parade.domain.seat.SeatService;
@@ -29,6 +33,7 @@ public class PaymentFacade {
     private final SeatService seatService;
     private final UserPointService userPointService;
     private final SeatPaymentService seatPaymentService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public SeatPayment payForSeat(long userId, long reservationId) {
         // 예약 완료시키기
@@ -61,6 +66,8 @@ public class PaymentFacade {
             "좌석 예약 결제"
         );
         pointHistoryService.record(new PointHistoryCommand(pointHistoryParams));
+
+        eventPublisher.publishEvent(new SeatReservationEvent(reservationId, seat.id(), userId, LocalDateTime.now()));
 
         // 결제 내역 반환
         return seatPayment;
