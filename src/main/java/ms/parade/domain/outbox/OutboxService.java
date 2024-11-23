@@ -9,9 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import ms.parade.infrastructure.outbox.OutboxModel;
 import ms.parade.infrastructure.outbox.OutboxParams;
@@ -20,14 +18,9 @@ import ms.parade.infrastructure.outbox.OutboxStatus;
 @Service
 @RequiredArgsConstructor
 public class OutboxService {
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
     private final OutboxRepository outboxRepository;
     private final ApplicationEventPublisher eventPublisher;
-
-    @PostConstruct
-    public void init() {
-        objectMapper.registerModule(new JavaTimeModule());
-    }
 
     public Object extractEvent(String eventType, String eventData)
         throws JsonProcessingException, ClassNotFoundException {
