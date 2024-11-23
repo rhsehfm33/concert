@@ -27,9 +27,6 @@ public class ReservationEventConsumer {
         );
         outboxService.changeStatus(outboxEventWrapper.outboxId(), OutboxStatus.RECEIVED);
 
-        System.out.println("Key received: " + record.key());
-        System.out.println("Message received: " + record.value());
-
         // Do its own logic
 
         // Success Outbox
