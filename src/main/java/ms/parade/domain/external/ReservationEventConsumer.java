@@ -1,6 +1,8 @@
 package ms.parade.domain.external;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +19,16 @@ import ms.parade.infrastructure.reservation.ReservationKafkaConfig;
 @Service
 @RequiredArgsConstructor
 public class ReservationEventConsumer {
+    private static final Logger logger = LoggerFactory.getLogger(ReservationEventConsumer.class);
+    private static final String GROUP_ID = "seat-consumer-group1";
+
     private final OutboxService outboxService;
     private final ObjectMapper objectMapper;
 
-    @KafkaListener(topics = ReservationKafkaConfig.SEAT_RESERVATION_TOPIC, groupId = "seat-consumer-group1")
+    @KafkaListener(topics = ReservationKafkaConfig.SEAT_RESERVATION_TOPIC, groupId = GROUP_ID)
     public void listen(ConsumerRecord<String, String> record) throws JsonProcessingException {
+        logger.info("Group:{}, Topic:{}, Partition:{}, Key:{} consumed",
+            GROUP_ID, record.topic(), record.partition(), record.key());
         OutboxEventWrapper<SeatReservationEvent> outboxEventWrapper = objectMapper.readValue(
             record.value(), OutboxEventWrapper.class
         );
