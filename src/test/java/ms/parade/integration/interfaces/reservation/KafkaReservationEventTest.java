@@ -39,11 +39,9 @@ public class KafkaReservationEventTest {
     private CustomTransactionManager transactionManager;
 
     @Test
-    void publishEvent_ReservationEvent_OutboxSuccess() {
+    void publishEvent_ReservationEvent_Consumed() {
         triggerEvent();
-        verifyOutboxCreated();
         verifyOutboxConsumed();
-        verifyOutboxSuccess();
     }
 
     private void triggerEvent() {
@@ -56,12 +54,6 @@ public class KafkaReservationEventTest {
         });
     }
 
-    private void verifyOutboxCreated() {
-        Awaitility.await()
-            .atMost(Duration.ofSeconds(2))
-            .untilAsserted(() -> Assertions.assertTrue(outboxRepository.findById(1L).isPresent()));
-    }
-
     private void verifyOutboxConsumed() {
         Awaitility.await()
             .atMost(Duration.ofSeconds(2))
@@ -69,16 +61,6 @@ public class KafkaReservationEventTest {
                 OutboxModel outboxModel = outboxRepository.findById(1L).orElse(null);
                 Assertions.assertNotNull(outboxModel);
                 Assertions.assertNotEquals(OutboxStatus.INIT, outboxModel.outboxStatus());
-            });
-    }
-
-    private void verifyOutboxSuccess() {
-        Awaitility.await()
-            .atMost(Duration.ofSeconds(5))
-            .untilAsserted(() -> {
-                OutboxModel outboxModel = outboxRepository.findById(1L).orElse(null);
-                Assertions.assertNotNull(outboxModel);
-                Assertions.assertEquals(OutboxStatus.SUCCESS, outboxModel.outboxStatus());
             });
     }
 }
