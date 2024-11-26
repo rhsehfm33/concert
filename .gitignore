@@ -38,3 +38,4 @@ out/
 
 ### data files ###
 /data
+/mysql_data

@@ -28,6 +28,7 @@ dependencies {
     implementation 'io.github.tobi-laa:spring-boot-embedded-redis:1.0.1' // embedded redis
     implementation 'org.springframework.kafka:spring-kafka'
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation 'mysql:mysql-connector-java:8.0.33'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -39,4 +40,10 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+bootJar {
+    archiveBaseName.set('parade') // JAR 이름 고정
+    archiveVersion.set('')       // 버전 정보 제거
+    archiveClassifier.set('')    // 클래스파이어 제거 (필요한 경우)
 }

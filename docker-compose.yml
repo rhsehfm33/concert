@@ -1,4 +1,8 @@
 version: '3.8'
+networks:
+  local_net:
+    name: local_net  # 명시적으로 네트워크 이름 지정
+
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -8,6 +12,8 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - local_net
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -21,3 +27,5 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
+    networks:
+      - local_net
