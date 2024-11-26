@@ -8,7 +8,7 @@ services:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
     ports:
-      - "2181:2181"
+      - "2182:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -19,13 +19,39 @@ services:
     image: confluentinc/cp-kafka:latest
     container_name: kafka
     ports:
-      - "9092:9092"
+      - "9093:9093"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://0.0.0.0:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
+    networks:
+      - local_net
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6380:6379"
+    networks:
+      - local_net
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3308:3306"  # MySQL 기본 포트
+    environment:
+      MYSQL_ROOT_PASSWORD: root  # root 사용자 비밀번호
+      MYSQL_DATABASE: parade_db  # 생성할 데이터베이스 이름
+      MYSQL_USER: parade_user    # 추가 사용자 이름
+      MYSQL_PASSWORD: parade_pass  # 추가 사용자의 비밀번호
+    volumes:
+      - ./mysql_data:/var/lib/mysql  # 데이터 볼륨 매핑
     networks:
       - local_net
