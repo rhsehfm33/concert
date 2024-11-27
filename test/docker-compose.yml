@@ -28,3 +28,25 @@ services:
       - "host.docker.internal:host-gateway"
     depends_on:
       - prometheus
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    privileged: true
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      - /etc/machine-id:/etc/machine-id:ro
+      - /dev/kmsg:/dev/kmsg:ro
+    restart: always
+  prometheus-cadvisor:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus-cadvisor:/etc/prometheus
+    command:
+      - --enable-feature=native-histograms
+      - --config.file=/etc/prometheus/prometheus.yml
+    depends_on:
+      - cadvisor
