@@ -1,7 +1,4 @@
 version: '3.8'
-networks:
-  dev_net:
-    name: dev_net  # 명시적으로 네트워크 이름 지정
 
 services:
   zookeeper-dev:
@@ -10,8 +7,6 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    networks:
-      - dev_net
 
   kafka-dev:
     image: confluentinc/cp-kafka:latest
@@ -23,18 +18,16 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper-dev
-    networks:
-      - dev_net
 
   redis-dev:
     image: redis:alpine
     container_name: redis-dev
-    networks:
-      - dev_net
 
   mysql-dev:
     image: mysql:8.0
     container_name: mysql-dev
+    ports:
+      - "3308:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root  # root 사용자 비밀번호
       MYSQL_DATABASE: parade_db  # 생성할 데이터베이스 이름
@@ -42,8 +35,6 @@ services:
       MYSQL_PASSWORD: parade_pass  # 추가 사용자의 비밀번호
     volumes:
       - ./mysql_data:/var/lib/mysql  # 데이터 볼륨 매핑
-    networks:
-      - dev_net
 
   spring-boot-app-dev:
     image: openjdk:17-jdk-alpine
@@ -51,14 +42,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
-          memory: 2g
+          cpus: '2'
+          memory: 4g
     volumes:
       - ./build/libs/parade.jar:/app/parade.jar  # 로컬 JAR 파일을 컨테이너로 매핑
       - ./data:/app/data # DB 매핑
     environment:
       SPRING_PROFILES_ACTIVE: dev
-      JAVA_OPTS: "-Xmx2g -Xms1g -XX:+UseG1GC"
+      JAVA_OPTS: "-Xmx4g -Xms2g -XX:+UseG1GC"
     command: [ "sh", "-c", "java $JAVA_OPTS -jar /app/parade.jar" ]
     ports:
       - "8081:8080"
@@ -66,5 +57,3 @@ services:
       - kafka-dev
       - redis-dev
       - mysql-dev
-    networks:
-      - dev_net

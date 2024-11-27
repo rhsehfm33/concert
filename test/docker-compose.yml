@@ -28,6 +28,7 @@ services:
       - "host.docker.internal:host-gateway"
     depends_on:
       - prometheus
+      - grafana
   cadvisor:
     image: google/cadvisor:latest
     container_name: cadvisor
