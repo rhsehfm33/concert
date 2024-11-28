@@ -399,7 +399,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(k6_http_reqs_total{testid=~\"$testid\"})",
+          "expr": "sum(increase(k6_http_reqs_total{testid=~\"$testid\"}[$__range]))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -461,7 +461,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(k6_http_reqs_total{testid=~\"$testid\", expected_response=\"false\"})",
+          "expr": "sum(increase(k6_http_reqs_total{testid=~\"$testid\", expected_response=\"false\"}[$__range]))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,

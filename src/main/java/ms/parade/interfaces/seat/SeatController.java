@@ -18,7 +18,7 @@ import ms.parade.domain.seat.SeatService;
 public class SeatController {
     private final SeatService seatService;
 
-    @GetMapping("/concerts/{scheduleId}/available-seats")
+    @GetMapping("/protected/concerts-schedules/{scheduleId}/available-seats")
     ResponseEntity<List<SeatResponse>> getAvailableSeats(@PathVariable long scheduleId) {
         List<Seat> seats = seatService.findAvailableSeats(scheduleId);
         List<SeatResponse> seatResponses = seats.stream().map(SeatResponse::new).toList();
