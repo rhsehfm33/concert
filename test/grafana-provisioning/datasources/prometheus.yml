@@ -7,7 +7,7 @@ datasources:
     url: http://prometheus:9090
     isDefault: false
     jsonData:
-      timeInterval: "1s"
+      timeInterval: "5s"
 
   - name: PrometheusCadvisor
     type: prometheus

@@ -52,7 +52,7 @@ services:
       JAVA_OPTS: "-Xmx4g -Xms2g -XX:+UseG1GC"
     command: [ "sh", "-c", "java $JAVA_OPTS -jar /app/parade.jar" ]
     ports:
-      - "8081:8080"
+      - "8080:8080"
     depends_on:
       - kafka-dev
       - redis-dev
