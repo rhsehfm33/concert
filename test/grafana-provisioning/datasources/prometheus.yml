@@ -6,6 +6,8 @@ datasources:
     access: proxy
     url: http://prometheus:9090
     isDefault: false
+    jsonData:
+      timeInterval: "1s"
 
   - name: PrometheusCadvisor
     type: prometheus
