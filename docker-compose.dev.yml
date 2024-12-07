@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  zookeeper-dev:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper-dev
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka-dev:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-dev
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-dev:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-dev:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper-dev
+
+  redis-dev:
+    image: redis:alpine
+    container_name: redis-dev
+
+  mysql-dev:
+    image: mysql:8.0
+    container_name: mysql-dev
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root  # root 사용자 비밀번호
+      MYSQL_DATABASE: parade_db  # 생성할 데이터베이스 이름
+      MYSQL_USER: parade_user    # 추가 사용자 이름
+      MYSQL_PASSWORD: parade_pass  # 추가 사용자의 비밀번호
+    volumes:
+      - ./mysql_data:/var/lib/mysql  # 데이터 볼륨 매핑
+
+  spring-boot-app-dev:
+    image: openjdk:17-jdk-alpine
+    container_name: spring-boot-app-dev
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4g
+    volumes:
+      - ./build/libs/parade.jar:/app/parade.jar  # 로컬 JAR 파일을 컨테이너로 매핑
+      - ./data:/app/data # DB 매핑
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      JAVA_OPTS: "-Xmx4g -Xms2g -XX:+UseG1GC"
+    command: [ "sh", "-c", "java $JAVA_OPTS -jar /app/parade.jar" ]
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka-dev
+      - redis-dev
+      - mysql-dev

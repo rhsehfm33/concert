@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana-provisioning:/etc/grafana/provisioning
+      - ./grafana-dashboard:/dashboard
+    depends_on:
+      - prometheus
+  prometheus:
+    image: prom/prometheus
+    command:
+      - --web.enable-remote-write-receiver
+      - --enable-feature=native-histograms
+      - --config.file=/etc/prometheus/prometheus.yml
+  k6:
+    image: grafana/k6
+    volumes:
+      - ./k6-scripts:/scripts
+    command: run -o experimental-prometheus-rw /scripts/stress.js
+    environment:
+      - K6_PROMETHEUS_RW_SERVER_URL=http://prometheus:9090/api/v1/write
+      - K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
+      - K6_PROMETHEUS_RW_PUSH_INTERVAL=1s
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - prometheus
+      - grafana
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    privileged: true
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      - /etc/machine-id:/etc/machine-id:ro
+      - /dev/kmsg:/dev/kmsg:ro
+    restart: always
+  prometheus-cadvisor:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus-cadvisor:/etc/prometheus
+    command:
+      - --enable-feature=native-histograms
+      - --config.file=/etc/prometheus/prometheus.yml
+    depends_on:
+      - cadvisor

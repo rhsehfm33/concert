@@ -16,7 +16,7 @@ public class RedissonConfig {
     private int redisPort;
 
     @Bean
-    public RedissonClient redissonClient(EmbeddedRedisConfig embeddedRedisConfig) {
+    public RedissonClient redissonClient() {
         Config config = new Config();
         config.useSingleServer().setAddress("redis://" + redisHost + ":" + redisPort);
         return Redisson.create(config);

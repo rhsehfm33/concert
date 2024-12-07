@@ -32,7 +32,7 @@ public class QueueTokenRepositoryImpl implements QueueTokenRepository {
     public QueueToken save(QueueTokenParams queueTokenParams) {
         String newId = UUID.randomUUID().toString();
         QueueTokenEntity queueTokenEntity = QueueTokenEntity.from(newId, queueTokenParams);
-        redisTemplate.opsForHash().put(QUEUE_TOKEN_KEY, newId, queueTokenEntity);
+        queueTokenCrudRepository.save(queueTokenEntity);
         waitingQueueTokenRepository.addToSortedSet(newId, System.currentTimeMillis());
         queueTokenUserIdRepository.addId(queueTokenEntity.getUserId(), newId);
         return QueueTokenEntity.to(queueTokenEntity);
@@ -59,8 +59,7 @@ public class QueueTokenRepositoryImpl implements QueueTokenRepository {
 
     @Override
     public Optional<QueueToken> findById(String id) {
-        QueueTokenEntity queueTokenEntity = (QueueTokenEntity) redisTemplate.opsForHash().get(QUEUE_TOKEN_KEY, id);
-        return  Optional.ofNullable(queueTokenEntity).map(QueueTokenEntity::to);
+        return queueTokenCrudRepository.findById(id).map(QueueTokenEntity::to);
     }
 
     @Override
