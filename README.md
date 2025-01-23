@@ -3,9 +3,9 @@
 
 # [ERD 문서](https://github.com/rhsehfm33/parade/blob/main/ERD.md)
 
-# [시퀀스 다이어그램](https://github.com/rhsehfm33/parade/blob/main/SEQUENCE.md)
+[//]: # (# [시퀀스 다이어그램]&#40;https://github.com/rhsehfm33/parade/blob/main/SEQUENCE.md&#41;)
 
-# [API 명세서](https://docs.google.com/spreadsheets/d/1e3kk1NFDIKOH9-aFPyLq_YYVukhtUDrGrpxJ1n_lxkQ/edit?gid=0#gid=0)
+[//]: # (# [API 명세서]&#40;https://docs.google.com/spreadsheets/d/1e3kk1NFDIKOH9-aFPyLq_YYVukhtUDrGrpxJ1n_lxkQ/edit?gid=0#gid=0&#41;)
 
 # [패키지 구조](https://github.com/rhsehfm33/parade/blob/main/PACKAGE_STRUCTURE.md)
 
